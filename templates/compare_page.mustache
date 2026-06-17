@@ -1,0 +1,34 @@
+<div class="wsmanager-compare-page">
+    <div class="mb-3">
+        <a href="{{backurl}}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_wsmanager{{/str}}
+        </a>
+    </div>
+
+    <h3>{{pagetitle}}</h3>
+
+    <div class="comparison-container mt-4">
+        <table class="table table-bordered table-sm comparison-table">
+            <thead>
+                <tr>
+                    <th width="50%">
+                        {{#str}}version, local_wsmanager{{/str}} {{v1.version}} 
+                        <small class="text-muted d-block">{{v1.date}}</small>
+                    </th>
+                    <th width="50%">
+                        {{#str}}version, local_wsmanager{{/str}} {{v2.version}}
+                        <small class="text-muted d-block">{{v2.date}}</small>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#lines}}
+                <tr>
+                    <td class="{{class1}}" style="white-space: pre-wrap; font-family: monospace;">{{content1}}</td>
+                    <td class="{{class2}}" style="white-space: pre-wrap; font-family: monospace;">{{content2}}</td>
+                </tr>
+                {{/lines}}
+            </tbody>
+        </table>
+    </div>
+</div>
