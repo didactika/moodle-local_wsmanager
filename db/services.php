@@ -75,6 +75,6 @@ $services = [
         ],
         'restrictedusers' => 1,
         'enabled' => 1,
-        'shortname' => 'ws_service_schema_manager',
+        'shortname' => 'ws_wsmanager',
     ],
 ];

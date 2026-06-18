@@ -301,7 +301,7 @@ $result = $validator->validate_content($yaml_content);
 
 The plugin exposes its own REST API so schemas can be managed programmatically — useful for CI/CD pipelines, deployment scripts, or any external tooling that needs to provision or update web services without accessing the Moodle UI.
 
-A pre-configured external service (`ws_service_schema_manager`) is installed automatically. Authorize a user with the `local/wsmanager:manage` capability to that service and use the token to call these functions:
+A pre-configured external service (`ws_wsmanager`) is installed automatically. Authorize a user with the `local/wsmanager:manage` capability to that service and use the token to call these functions:
 
 | Function | Type | Description |
 |----------|------|-------------|

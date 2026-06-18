@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // General.
-$string['pluginname'] = 'Service Manager';
+$string['pluginname'] = 'Web Service Manager';
 $string['privacy:metadata'] = 'The Web Service Manager plugin does not store any personal data.';
 
 // Capabilities.
@@ -35,7 +35,7 @@ $string['wsmanager:manage'] = 'Manage service schemas';
 $string['wsmanager:view'] = 'View service schemas';
 
 // Navigation and pages.
-$string['dashboard'] = 'Service Schemas Dashboard';
+$string['dashboard'] = 'Dashboard';
 $string['upload_schema'] = 'Upload Schema';
 $string['edit_schema'] = 'Edit Schema';
 $string['view_schema'] = 'View Schema';
