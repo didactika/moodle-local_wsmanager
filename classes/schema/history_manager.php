@@ -22,8 +22,9 @@ defined('MOODLE_INTERNAL') || die();
  * History manager for schema versioning and rollback.
  *
  * @package    local_wsmanager
- * @copyright  2026 Your Organization
- * @license    http://www.opensource.org/licenses/MIT MIT License
+ * @author     Eduardo Estrada <me@e2rd0.com>
+ * @copyright  2026 Didactika.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class history_manager {
 

@@ -19,7 +19,8 @@
  *
  * @package    local_wsmanager
  * @category   test
- * @copyright  2026 Your Organization
+ * @author     Eduardo Estrada <me@e2rd0.com>
+ * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -52,7 +53,7 @@ definition:
 YAML;
 
         $manager = new \local_wsmanager\schema\manager();
-        $manager->create_from_yaml($yaml, false);
+        $manager->create_schema($yaml, false);
     }
 
     /**
@@ -74,7 +75,7 @@ definition:
   functions:
     - core_webservice_get_site_info
 YAML;
-            $manager->create_from_yaml($yaml, false);
+            $manager->create_schema($yaml, false);
         }
     }
 
@@ -87,7 +88,7 @@ YAML;
     public function a_schema_with_id_should_exist($schemaid) {
         global $DB;
 
-        $exists = $DB->record_exists('local_wsmanager', ['schema_id' => $schemaid]);
+        $exists = $DB->record_exists('local_wsmanager_schemas', ['schema_id' => $schemaid]);
         if (!$exists) {
             throw new Exception("Schema with ID '{$schemaid}' does not exist");
         }
@@ -102,7 +103,7 @@ YAML;
     public function a_schema_with_id_should_not_exist($schemaid) {
         global $DB;
 
-        $exists = $DB->record_exists('local_wsmanager', ['schema_id' => $schemaid]);
+        $exists = $DB->record_exists('local_wsmanager_schemas', ['schema_id' => $schemaid]);
         if ($exists) {
             throw new Exception("Schema with ID '{$schemaid}' still exists");
         }

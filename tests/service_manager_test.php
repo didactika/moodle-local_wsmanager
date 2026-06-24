@@ -39,7 +39,7 @@ final class service_manager_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\service_manager();
-        $serviceid = $manager->create_service('test.service', 'Test Service');
+        $serviceid = $manager->create_external_service('test.service', 'Test Service');
 
         $this->assertIsInt($serviceid);
         $this->assertGreaterThan(0, $serviceid);
@@ -48,27 +48,29 @@ final class service_manager_test extends \advanced_testcase {
         $service = $DB->get_record('external_services', ['id' => $serviceid]);
         $this->assertNotFalse($service);
         $this->assertEquals('ws_test_service', $service->shortname);
-        $this->assertEquals('Test Service', $service->name);
+        $this->assertEquals('Web Service - Test Service', $service->name);
         $this->assertEquals(1, $service->restrictedusers);
         $this->assertEquals(1, $service->enabled);
+        $this->assertEquals(0, $service->downloadfiles);
+        $this->assertEquals(0, $service->uploadfiles);
     }
 
     /**
-     * Test getting existing service ID.
+     * Test checking whether a service exists.
      */
-    public function test_get_service_id(): void {
+    public function test_service_exists(): void {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\service_manager();
 
         // Service doesn't exist yet.
-        $this->assertNull($manager->get_service_id('test.service'));
+        $this->assertFalse($manager->service_exists(0));
 
         // Create service.
-        $serviceid = $manager->create_service('test.service', 'Test Service');
+        $serviceid = $manager->create_external_service('test.service', 'Test Service');
 
-        // Now it should return the ID.
-        $this->assertEquals($serviceid, $manager->get_service_id('test.service'));
+        // Now it should exist.
+        $this->assertTrue($manager->service_exists($serviceid));
     }
 
     /**
@@ -81,11 +83,11 @@ final class service_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\service_manager();
 
         // Create service.
-        $serviceid = $manager->create_service('test.service', 'Test Service');
+        $serviceid = $manager->create_external_service('test.service', 'Test Service');
 
         // Add functions that exist in Moodle core.
         $functions = ['core_webservice_get_site_info'];
-        $manager->add_functions($serviceid, $functions);
+        $manager->add_functions_to_service($serviceid, $functions);
 
         // Verify functions were added.
         $servicefunction = $DB->get_record('external_services_functions', [
@@ -93,6 +95,7 @@ final class service_manager_test extends \advanced_testcase {
             'functionname' => 'core_webservice_get_site_info',
         ]);
         $this->assertNotFalse($servicefunction);
+        $this->assertEquals(['core_webservice_get_site_info'], $manager->get_service_functions($serviceid));
     }
 
     /**
@@ -108,7 +111,7 @@ final class service_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\service_manager();
 
         // Create service.
-        $serviceid = $manager->create_service('test.service', 'Test Service');
+        $serviceid = $manager->create_external_service('test.service', 'Test Service');
 
         // Authorize user.
         $manager->authorize_user($serviceid, $user->id);
@@ -125,19 +128,18 @@ final class service_manager_test extends \advanced_testcase {
      * Test service deletion.
      */
     public function test_delete_service(): void {
-        global $DB;
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\service_manager();
 
         // Create service.
-        $serviceid = $manager->create_service('test.service', 'Test Service');
-        $this->assertNotFalse($DB->get_record('external_services', ['id' => $serviceid]));
+        $serviceid = $manager->create_external_service('test.service', 'Test Service');
+        $this->assertTrue($manager->service_exists($serviceid));
 
         // Delete service.
-        $manager->delete_service('test.service');
+        $manager->delete_service($serviceid);
 
         // Service should no longer exist.
-        $this->assertFalse($DB->get_record('external_services', ['id' => $serviceid]));
+        $this->assertFalse($manager->service_exists($serviceid));
     }
 }

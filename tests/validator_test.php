@@ -169,11 +169,12 @@ YAML;
         $this->resetAfterTest();
 
         // Insert a schema record.
-        $DB->insert_record('local_wsmanager', [
+        $DB->insert_record('local_wsmanager_schemas', [
             'schema_id' => 'existing.service',
             'name' => 'Existing Service',
             'version' => '1.0.0',
             'yaml_content' => 'test',
+            'yaml_hash' => sha1('test'),
             'status' => 'healthy',
             'enabled' => 1,
             'timecreated' => time(),

@@ -32,89 +32,102 @@ defined('MOODLE_INTERNAL') || die();
 final class capability_calculator_test extends \advanced_testcase {
 
     /**
-     * Test getting capabilities for a known function.
+     * Insert a fake external function fixture for testing.
+     *
+     * @param string $name Function name
+     * @param string $capabilities Comma-separated capability list
      */
-    public function test_get_capabilities_for_function(): void {
+    protected function create_function_fixture(string $name, string $capabilities): void {
+        global $DB;
+
+        $DB->insert_record('external_functions', [
+            'name' => $name,
+            'classname' => 'fake_external_class',
+            'methodname' => 'execute',
+            'classpath' => '',
+            'component' => 'local_wsmanager',
+            'capabilities' => $capabilities,
+            'services' => '',
+        ]);
+    }
+
+    /**
+     * Test getting capabilities for a single known function.
+     */
+    public function test_get_function_capabilities(): void {
         $this->resetAfterTest();
+        $this->create_function_fixture('local_wsmanager_fake_function', 'moodle/fake:cap1,moodle/fake:cap2');
 
         $calculator = new \local_wsmanager\automation\capability_calculator();
-
-        // core_webservice_get_site_info should always exist.
-        $caps = $calculator->get_capabilities_for_function('core_webservice_get_site_info');
+        $caps = $calculator->get_function_capabilities('local_wsmanager_fake_function');
 
         $this->assertIsArray($caps);
-        // This function typically requires moodle/site:config or no specific caps.
+        $this->assertEquals(['moodle/fake:cap1', 'moodle/fake:cap2'], $caps);
     }
 
     /**
      * Test calculating capabilities from multiple functions.
      */
-    public function test_calculate_capabilities(): void {
+    public function test_get_capabilities_for_functions(): void {
         $this->resetAfterTest();
+        $this->create_function_fixture('local_wsmanager_fake_function', 'moodle/fake:cap1');
 
         $calculator = new \local_wsmanager\automation\capability_calculator();
 
         $functions = [
-            ['name' => 'core_webservice_get_site_info', 'critical' => true],
+            ['name' => 'local_wsmanager_fake_function', 'critical' => true],
         ];
 
-        $caps = $calculator->calculate_capabilities($functions);
+        $caps = $calculator->get_capabilities_for_functions($functions);
 
         $this->assertIsArray($caps);
+        $this->assertContains('moodle/fake:cap1', $caps);
     }
 
     /**
-     * Test merging extra capabilities.
+     * Test that get_capabilities_for_functions accepts plain string function names too.
      */
-    public function test_merge_extra_capabilities(): void {
+    public function test_get_capabilities_for_functions_with_string_names(): void {
         $this->resetAfterTest();
+        $this->create_function_fixture('local_wsmanager_fake_function', 'moodle/fake:cap1');
 
         $calculator = new \local_wsmanager\automation\capability_calculator();
+        $caps = $calculator->get_capabilities_for_functions(['local_wsmanager_fake_function']);
 
-        $functions = [
-            ['name' => 'core_webservice_get_site_info', 'critical' => true],
-        ];
-        $extra = ['moodle/user:viewdetails', 'moodle/course:view'];
-
-        $caps = $calculator->calculate_capabilities($functions, $extra);
-
-        $this->assertIsArray($caps);
-        $this->assertContains('moodle/user:viewdetails', $caps);
-        $this->assertContains('moodle/course:view', $caps);
+        $this->assertContains('moodle/fake:cap1', $caps);
     }
 
     /**
-     * Test handling unknown function.
+     * Test handling an unknown function.
      */
     public function test_unknown_function(): void {
         $this->resetAfterTest();
 
         $calculator = new \local_wsmanager\automation\capability_calculator();
 
-        $caps = $calculator->get_capabilities_for_function('nonexistent_function_xyz');
-
-        $this->assertIsArray($caps);
-        $this->assertEmpty($caps);
+        $this->assertFalse($calculator->function_exists('nonexistent_function_xyz'));
+        $this->assertEmpty($calculator->get_function_capabilities('nonexistent_function_xyz'));
+        $this->assertEmpty($calculator->get_capabilities_for_functions(['nonexistent_function_xyz']));
     }
 
     /**
-     * Test deduplication of capabilities.
+     * Test deduplication of capabilities across multiple functions sharing one.
      */
     public function test_deduplicate_capabilities(): void {
         $this->resetAfterTest();
+        $this->create_function_fixture('local_wsmanager_fake_function_a', 'moodle/fake:shared,moodle/fake:onlya');
+        $this->create_function_fixture('local_wsmanager_fake_function_b', 'moodle/fake:shared,moodle/fake:onlyb');
 
         $calculator = new \local_wsmanager\automation\capability_calculator();
+        $caps = $calculator->get_capabilities_for_functions([
+            'local_wsmanager_fake_function_a',
+            'local_wsmanager_fake_function_b',
+        ]);
 
-        // Same capability added multiple times.
-        $extra = [
-            'moodle/user:viewdetails',
-            'moodle/user:viewdetails',
-            'moodle/course:view',
-        ];
-
-        $caps = $calculator->calculate_capabilities([], $extra);
-
-        // Should be deduplicated.
-        $this->assertEquals(2, count($caps));
+        // moodle/fake:shared must appear only once despite being on both functions.
+        $this->assertEquals(3, count($caps));
+        $this->assertContains('moodle/fake:shared', $caps);
+        $this->assertContains('moodle/fake:onlya', $caps);
+        $this->assertContains('moodle/fake:onlyb', $caps);
     }
 }

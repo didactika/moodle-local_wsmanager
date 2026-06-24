@@ -39,7 +39,7 @@ final class user_manager_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\user_manager();
-        $userid = $manager->create_user('test.service', 'Test Service');
+        $userid = $manager->create_service_user('test.service', 'Test Service');
 
         $this->assertIsInt($userid);
         $this->assertGreaterThan(0, $userid);
@@ -49,26 +49,27 @@ final class user_manager_test extends \advanced_testcase {
         $this->assertNotFalse($user);
         $this->assertEquals('ws.test.service', $user->username);
         $this->assertStringStartsWith('ws.test.service@devnull.', $user->email);
-        $this->assertEquals('Test Service', $user->firstname);
+        // firstname is always the fixed marker; lastname carries the display name.
+        $this->assertEquals('User Webservice', $user->firstname);
+        $this->assertEquals('Test Service', $user->lastname);
     }
 
     /**
-     * Test getting existing user ID.
+     * Test checking whether a user exists.
      */
-    public function test_get_user_id(): void {
-        global $DB;
+    public function test_user_exists(): void {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\user_manager();
 
         // User doesn't exist yet.
-        $this->assertNull($manager->get_user_id('test.service'));
+        $this->assertFalse($manager->user_exists(0));
 
         // Create user.
-        $userid = $manager->create_user('test.service', 'Test Service');
+        $userid = $manager->create_service_user('test.service', 'Test Service');
 
-        // Now it should return the ID.
-        $this->assertEquals($userid, $manager->get_user_id('test.service'));
+        // Now it should exist.
+        $this->assertTrue($manager->user_exists($userid));
     }
 
     /**
@@ -81,12 +82,12 @@ final class user_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\user_manager();
 
         // Test with dots.
-        $userid = $manager->create_user('myapp.users.v2', 'My App');
+        $userid = $manager->create_service_user('myapp.users.v2', 'My App');
         $user = $DB->get_record('user', ['id' => $userid]);
         $this->assertEquals('ws.myapp.users.v2', $user->username);
 
         // Test simple ID.
-        $userid2 = $manager->create_user('simple', 'Simple Service');
+        $userid2 = $manager->create_service_user('simple', 'Simple Service');
         $user2 = $DB->get_record('user', ['id' => $userid2]);
         $this->assertEquals('ws.simple', $user2->username);
     }
@@ -101,11 +102,11 @@ final class user_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\user_manager();
 
         // Create user.
-        $userid = $manager->create_user('test.service', 'Test Service');
+        $userid = $manager->create_service_user('test.service', 'Test Service');
         $this->assertNotFalse($DB->get_record('user', ['id' => $userid]));
 
         // Delete user.
-        $manager->delete_user('test.service');
+        $manager->delete_user($userid);
 
         // User should be deleted (marked as deleted in Moodle).
         $user = $DB->get_record('user', ['id' => $userid]);

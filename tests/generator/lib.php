@@ -19,7 +19,8 @@
  *
  * @package    local_wsmanager
  * @category   test
- * @copyright  2026 Your Organization
+ * @author     Eduardo Estrada <me@e2rd0.com>
+ * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -74,10 +75,11 @@ definition:
 YAML;
 
         $record->yaml_content = $yamlcontent;
+        $record->yaml_hash = hash('sha256', $yamlcontent);
         $record->timecreated = time();
         $record->timemodified = time();
 
-        $record->id = $DB->insert_record('local_wsmanager', $record);
+        $record->id = $DB->insert_record('local_wsmanager_schemas', $record);
 
         return $record;
     }
@@ -91,6 +93,6 @@ YAML;
      */
     public function create_schema_from_yaml($yaml, $generatetoken = false) {
         $manager = new \local_wsmanager\schema\manager();
-        return $manager->create_from_yaml($yaml, $generatetoken);
+        return $manager->create_schema($yaml, $generatetoken);
     }
 }

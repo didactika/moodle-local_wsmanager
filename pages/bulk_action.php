@@ -18,8 +18,9 @@
  * Bulk action handler for schemas.
  *
  * @package    local_wsmanager
- * @copyright  2026 Your Organization
- * @license    http://www.opensource.org/licenses/MIT MIT License
+ * @author     Eduardo Estrada <me@e2rd0.com>
+ * @copyright  2026 Didactika.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../../config.php');

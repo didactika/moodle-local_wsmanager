@@ -39,33 +39,34 @@ final class role_manager_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\role_manager();
-        $roleid = $manager->create_role('test.service', 'Test Service');
+        $roleid = $manager->create_service_role('test.service', 'Test Service', 'Test description');
 
         $this->assertIsInt($roleid);
         $this->assertGreaterThan(0, $roleid);
 
-        // Verify role was created with correct shortname pattern.
+        // Verify role was created with correct shortname pattern and name.
         $role = $DB->get_record('role', ['id' => $roleid]);
         $this->assertNotFalse($role);
         $this->assertEquals('ws_test_service', $role->shortname);
+        $this->assertEquals('Role for Test Service', $role->name);
     }
 
     /**
-     * Test getting existing role ID.
+     * Test checking whether a role exists.
      */
-    public function test_get_role_id(): void {
+    public function test_role_exists(): void {
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\role_manager();
 
         // Role doesn't exist yet.
-        $this->assertNull($manager->get_role_id('test.service'));
+        $this->assertFalse($manager->role_exists(0));
 
         // Create role.
-        $roleid = $manager->create_role('test.service', 'Test Service');
+        $roleid = $manager->create_service_role('test.service', 'Test Service', 'Test description');
 
-        // Now it should return the ID.
-        $this->assertEquals($roleid, $manager->get_role_id('test.service'));
+        // Now it should exist.
+        $this->assertTrue($manager->role_exists($roleid));
     }
 
     /**
@@ -78,7 +79,7 @@ final class role_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\role_manager();
 
         // Test with dots.
-        $roleid = $manager->create_role('myapp.users.v2', 'My App');
+        $roleid = $manager->create_service_role('myapp.users.v2', 'My App', 'Description');
         $role = $DB->get_record('role', ['id' => $roleid]);
         $this->assertEquals('ws_myapp_users_v2', $role->shortname);
     }
@@ -93,7 +94,7 @@ final class role_manager_test extends \advanced_testcase {
         $manager = new \local_wsmanager\automation\role_manager();
 
         // Create role.
-        $roleid = $manager->create_role('test.service', 'Test Service');
+        $roleid = $manager->create_service_role('test.service', 'Test Service', 'Test description');
 
         // Assign some basic capabilities.
         $capabilities = ['moodle/user:viewalldetails', 'moodle/course:view'];
@@ -110,25 +111,27 @@ final class role_manager_test extends \advanced_testcase {
             $this->assertNotFalse($assigned);
             $this->assertEquals(CAP_ALLOW, $assigned->permission);
         }
+
+        // get_role_capabilities should reflect the same set.
+        $this->assertEqualsCanonicalizing($capabilities, $manager->get_role_capabilities($roleid));
     }
 
     /**
      * Test role deletion.
      */
     public function test_delete_role(): void {
-        global $DB;
         $this->resetAfterTest();
 
         $manager = new \local_wsmanager\automation\role_manager();
 
         // Create role.
-        $roleid = $manager->create_role('test.service', 'Test Service');
-        $this->assertNotFalse($DB->get_record('role', ['id' => $roleid]));
+        $roleid = $manager->create_service_role('test.service', 'Test Service', 'Test description');
+        $this->assertTrue($manager->role_exists($roleid));
 
         // Delete role.
-        $manager->delete_role('test.service');
+        $manager->delete_role($roleid);
 
         // Role should no longer exist.
-        $this->assertFalse($DB->get_record('role', ['id' => $roleid]));
+        $this->assertFalse($manager->role_exists($roleid));
     }
 }

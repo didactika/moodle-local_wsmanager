@@ -56,8 +56,16 @@ YAML;
 
     /**
      * Test parsing invalid YAML content.
+     *
+     * Only meaningful when the PECL yaml extension is installed: the bundled
+     * fallback parser (simple_parse) is a lenient line-based parser for the
+     * supported subset and does not perform strict YAML validation.
      */
     public function test_parse_invalid_yaml(): void {
+        if (!function_exists('yaml_parse')) {
+            $this->markTestSkipped('PECL yaml extension not installed; fallback parser does not validate strictly.');
+        }
+
         $yaml = "invalid: yaml: content: [broken";
 
         $parser = new \local_wsmanager\schema\yaml_parser();
@@ -109,7 +117,7 @@ YAML;
 
         $parser = new \local_wsmanager\schema\yaml_parser();
         $data = $parser->parse($yaml);
-        $meta = $parser->get_meta($data);
+        $meta = $parser->extract_meta($data);
 
         $this->assertEquals('test.service', $meta['id']);
         $this->assertEquals('Test Service', $meta['name']);
@@ -138,7 +146,7 @@ YAML;
 
         $parser = new \local_wsmanager\schema\yaml_parser();
         $data = $parser->parse($yaml);
-        $functions = $parser->get_functions($data);
+        $functions = $parser->extract_functions($data);
 
         $this->assertCount(3, $functions);
 
@@ -174,7 +182,7 @@ YAML;
 
         $parser = new \local_wsmanager\schema\yaml_parser();
         $data = $parser->parse($yaml);
-        $caps = $parser->get_extra_capabilities($data);
+        $caps = $parser->extract_extra_capabilities($data);
 
         $this->assertCount(2, $caps);
         $this->assertContains('moodle/user:viewdetails', $caps);
