@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/wsmanager/db" VERSION="20260202" COMMENT="XMLDB file for local_wsmanager">
+  <TABLES>
+    <TABLE NAME="local_wsmanager_schemas" COMMENT="Stores service schema definitions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="schema_id" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Unique ID, only letters, numbers and dots"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Display name from meta.name"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Description from meta.description"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="Schema version"/>
+        <FIELD NAME="maintainer" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Maintainer info"/>
+        <FIELD NAME="yaml_content" TYPE="text" NOTNULL="true" COMMENT="Full YAML content"/>
+        <FIELD NAME="yaml_hash" TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="SHA256 hash for change detection"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="Whether schema is active"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="healthy" COMMENT="Health status: healthy, warning, critical"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="ID of the created WS user"/>
+        <FIELD NAME="roleid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="ID of the created role"/>
+        <FIELD NAME="serviceid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="ID of the external service"/>
+        <FIELD NAME="tokenid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="ID of the generated token"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="schema_id_unique" TYPE="unique" FIELDS="schema_id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_wsmanager_healthlog" COMMENT="Health check logs for schemas">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="schemaid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Reference to schema"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="Status at check time"/>
+        <FIELD NAME="message" TYPE="text" NOTNULL="false" COMMENT="Summary message"/>
+        <FIELD NAME="details" TYPE="text" NOTNULL="false" COMMENT="JSON with detailed results"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_wsmanager_schemas" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="schemaid_time_idx" UNIQUE="false" FIELDS="schemaid, timecreated"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_wsmanager_history" COMMENT="Version history for schema changes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="schemaid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Reference to schema"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="Version at this point"/>
+        <FIELD NAME="yaml_content" TYPE="text" NOTNULL="true" COMMENT="Full YAML content snapshot"/>
+        <FIELD NAME="yaml_hash" TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="Hash for comparison"/>
+        <FIELD NAME="change_reason" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Reason for change"/>
+        <FIELD NAME="changedby" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User who made the change"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_wsmanager_schemas" REFFIELDS="id"/>
+        <KEY NAME="changedby_fk" TYPE="foreign" FIELDS="changedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="schemaid_time_idx" UNIQUE="false" FIELDS="schemaid, timecreated"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

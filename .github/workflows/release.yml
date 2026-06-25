@@ -1,0 +1,74 @@
+name: Release on version bump
+
+# Creates a git tag and a GitHub release automatically whenever the
+# $plugin->release value in version.php changes on the main branch.
+# It only acts when a tag for that release does not already exist, so
+# re-running or unrelated edits to version.php are safe (idempotent).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - version.php
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read release info from version.php
+        id: ver
+        run: |
+          release=$(grep -oP '\$plugin->release\s*=\s*'\''\K[^'\'']+' version.php)
+          version=$(grep -oP '\$plugin->version\s*=\s*\K[0-9]+' version.php)
+          if [ -z "$release" ]; then
+            echo "::error::Could not parse \$plugin->release from version.php"
+            exit 1
+          fi
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$release" >> "$GITHUB_OUTPUT"
+          echo "Detected release v$release (version $version)"
+
+      - name: Check whether the tag already exists
+        id: check
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.ver.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag ${{ steps.ver.outputs.tag }} already exists — nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract release notes from CHANGELOG.md
+        if: steps.check.outputs.exists == 'false'
+        id: notes
+        run: |
+          release='${{ steps.ver.outputs.release }}'
+          awk -v ver="$release" '
+            $0 ~ "^## \\[" ver "\\]" {f=1; next}
+            f && (/^## \[/ || /^\[[^]]+\]:/) {exit}
+            f {print}
+          ' CHANGELOG.md | sed '/./,$!d' > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            printf 'Release %s.\n' "$release" > release_notes.md
+          fi
+          echo "----- release notes -----"
+          cat release_notes.md
+
+      - name: Create tag and release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.ver.outputs.tag }}" \
+            --target "${{ github.sha }}" \
+            --title "${{ steps.ver.outputs.tag }}" \
+            --notes-file release_notes.md

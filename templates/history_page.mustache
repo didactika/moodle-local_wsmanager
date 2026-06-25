@@ -1,0 +1,150 @@
+<div class="wsmanager-history-page">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <a href="{{backurl}}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_wsmanager{{/str}}
+        </a>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="historyFiltersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-filter mr-1"></i>{{#str}}filters, local_wsmanager{{/str}}
+                {{#hasfilters}} <span class="badge badge-primary ml-1">{{filtercount}}</span>{{/hasfilters}}
+            </button>
+            <div class="wsmanager-filter-dropdown dropdown-menu dropdown-menu-right p-3" style="min-width: 280px;" aria-labelledby="historyFiltersDropdown">
+                <form method="get" action="" id="history-filter-form" class="wsmanager-filter-form">
+                    <input type="hidden" name="id" value="{{id}}">
+                    
+                    <div class="mb-3">
+                        <label for="filter-version">{{#str}}filter_version, local_wsmanager{{/str}}</label>
+                        <input type="text" class="form-control" id="filter-version" name="version" value="{{filterversion}}" placeholder="{{#str}}filter_version, local_wsmanager{{/str}}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filter-perpage">{{#str}}filter_per_page, local_wsmanager{{/str}}</label>
+                        <select class="form-control" id="filter-perpage" name="perpage">
+                            {{#perpageoptions}}
+                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>
+                            {{/perpageoptions}}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filter-datefrom">{{#str}}filter_date_from, local_wsmanager{{/str}}</label>
+                        <input type="date" class="form-control" id="filter-datefrom" name="datefrom_date" value="{{datefromval}}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filter-dateto">{{#str}}filter_date_to, local_wsmanager{{/str}}</label>
+                        <input type="date" class="form-control" id="filter-dateto" name="dateto_date" value="{{datetoval}}">
+                    </div>
+
+                    <input type="hidden" name="datefrom" id="history-datefrom-timestamp" value="">
+                    <input type="hidden" name="dateto" id="history-dateto-timestamp" value="">
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{clearurl}}" class="btn btn-secondary">
+                            <i class="fa fa-times mr-1"></i>{{#str}}filter_clear, local_wsmanager{{/str}}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-check mr-1"></i>{{#str}}filter_apply, local_wsmanager{{/str}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{#currentversion}}
+    <div class="card mb-4 border-left-primary shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <div class="d-flex align-items-center mb-1">
+                    <h4 class="m-0 mr-3">{{#str}}version, local_wsmanager{{/str}} {{version}}</h4>
+                    <span class="badge badge-success">{{#str}}current, local_wsmanager{{/str}}</span>
+                </div>
+                <div class="text-muted">{{#str}}schema_modified, local_wsmanager{{/str}}: {{timemodified}}</div>
+            </div>
+            <div class="text-right">
+                <a href="{{editurl}}" class="btn btn-outline-primary">
+                    <i class="fa fa-pencil mr-1"></i>{{#str}}edit, local_wsmanager{{/str}}
+                </a>
+            </div>
+        </div>
+    </div>
+    {{/currentversion}}
+
+    <div class="wsmanager-history">
+        <form action="{{compareaction}}" method="get">
+            <input type="hidden" name="id" value="{{id}}">
+            <div class="mb-3 text-right">
+                <button type="submit" id="compare-btn" class="btn btn-primary" disabled>
+                    {{#str}}compare_versions, local_wsmanager{{/str}}
+                </button>
+            </div>
+
+            {{#nohistory}}
+                <div class="alert alert-info">
+                    {{#hasfilters}}{{#str}}no_schemas_filtered, local_wsmanager{{/str}}{{/hasfilters}}
+                    {{^hasfilters}}{{#str}}no_history, local_wsmanager{{/str}}{{/hasfilters}}
+                </div>
+            {{/nohistory}}
+
+            {{^nohistory}}
+                <p>{{#str}}history_count, local_wsmanager, {{totalcount}}{{/str}}</p>
+                
+                                <table class="generaltable table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 5%;">{{#str}}selected, local_wsmanager{{/str}}</th>
+                            <th style="width: 10%;">{{#str}}version, local_wsmanager{{/str}}</th>
+                            <th style="width: 25%;">{{#str}}modified, local_wsmanager{{/str}}</th>
+                            <th style="width: 40%;">{{#str}}description, local_wsmanager{{/str}}</th>
+                            <th class="text-right" style="width: 20%;">{{#str}}actions, local_wsmanager{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#history_rows}}
+                        <tr class="align-middle">
+                            <td class="text-center">
+                                <input type="checkbox" name="compare[]" value="{{id}}" class="compare-checkbox mx-2">
+                            </td>
+                            <td><strong>{{version}}</strong></td>
+                            <td>
+                                <div class="mb-1">{{{user_profile}}}</div>
+                                <div class="small text-muted">{{date}}</div>
+                            </td>
+                            <td>
+                                {{#change_reason}}
+                                <div class="mb-1 font-italic text-muted">{{{change_reason}}}</div>
+                                {{/change_reason}}
+                                
+                                <a class="btn btn-sm btn-link pl-0 text-left toggle-yaml-btn" href="#" data-target="yaml-content-{{id}}">
+                                    <i class="fa fa-code mr-1"></i>{{#str}}view_yaml, local_wsmanager{{/str}}
+                                </a>
+                                <div id="yaml-content-{{id}}" style="display: none; margin-top: 5px;">
+                                    <pre class="bg-light p-2 rounded small m-0" style="max-height: 200px; overflow-y: auto;"><code>{{yaml_content}}</code></pre>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                {{#rollback_url}}
+                                <a href="{{rollback_url}}" class="btn btn-sm btn-outline-warning mr-1" title="{{#str}}rollback, local_wsmanager{{/str}}">
+                                    <i class="fa fa-undo mr-1"></i>{{#str}}rollback, local_wsmanager{{/str}}
+                                </a>
+                                {{/rollback_url}}
+                                <a href="{{view_url}}" class="btn btn-sm btn-secondary" title="{{#str}}action_view, local_wsmanager{{/str}}">
+                                    <i class="fa fa-info-circle"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/history_rows}}
+                    </tbody>
+                </table>
+
+                <div class="mt-3">
+                    {{{pagingbar}}}
+                </div>
+            {{/nohistory}}
+        </form>
+    </div>
+</div>

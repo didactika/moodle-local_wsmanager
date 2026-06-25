@@ -1,0 +1,294 @@
+{{!
+    @template local_wsmanager/schema_detail
+
+    Schema detail view template.
+
+    Context variables required for this template:
+    * schema_id - String
+    * name - String
+    * version - String
+    * description - String
+    * status - String
+    * status_label - String
+    * status_class - String
+    * status_icon - String
+    * functions - Array
+    * new_token - String (optional, for newly generated tokens)
+    * can_manage - Boolean
+}}
+
+<div class="wsmanager-detail">
+    {{! Back button }}
+    {{#back_url}}
+    <div class="mb-4">
+        <a href="{{back_url}}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_wsmanager{{/str}}
+        </a>
+    </div>
+    {{/back_url}}
+    {{^back_url}}
+        {{^is_history_view}}
+        <div class="mb-4">
+            <a href="{{dashboard_url}}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left mr-2"></i>{{#str}}dashboard, local_wsmanager{{/str}}
+            </a>
+        </div>
+        {{/is_history_view}}
+    {{/back_url}}
+
+    {{! Token display for newly generated tokens }}
+    {{#show_new_token}}
+    <div class="alert alert-success token-display mb-4" role="alert">
+        <h4 class="alert-heading">
+            <i class="fa fa-key mr-2"></i>{{#str}}token_generated, local_wsmanager{{/str}}
+        </h4>
+        <p class="mb-3">{{#str}}token_copy_warning, local_wsmanager{{/str}}</p>
+        <hr>
+        <div class="input-group">
+            <input type="text" class="form-control font-monospace" value="{{new_token}}" readonly id="new-token-value">
+            <div class="input-group-append">
+                <button class="btn btn-success copy-token" type="button" data-token="{{new_token}}" data-target="new-token-value">
+                    <i class="fa fa-copy mr-1"></i>{{#str}}copy, local_wsmanager{{/str}}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{/show_new_token}}
+
+    {{! Header card }}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{name}}</h3>
+            <span class="badge {{status_class}} badge-lg">
+                <i class="fa {{status_icon}} mr-1"></i>{{status_label}}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">{{#str}}schema_id, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8"><code>{{schema_id}}</code></dd>
+
+                        <dt class="col-sm-4">{{#str}}schema_version, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8">{{version}}</dd>
+
+                        {{#maintainer}}
+                        <dt class="col-sm-4">{{#str}}schema_maintainer, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8">{{maintainer}}</dd>
+                        {{/maintainer}}
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">{{#str}}schema_created, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8">{{timecreated}}</dd>
+
+                        <dt class="col-sm-4">{{#str}}schema_modified, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8">{{timemodified}}</dd>
+
+                        <dt class="col-sm-4">{{#str}}schema_enabled, local_wsmanager{{/str}}</dt>
+                        <dd class="col-sm-8">
+                            {{#enabled}}<span class="badge badge-success">{{#str}}yes{{/str}}</span>{{/enabled}}
+                            {{^enabled}}<span class="badge badge-secondary">{{#str}}no{{/str}}</span>{{/enabled}}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            {{#description}}
+            <hr>
+            <p class="text-muted mb-0">{{description}}</p>
+            {{/description}}
+        </div>
+
+        {{#can_manage}}
+        <div class="card-footer">
+            <a href="{{edit_url}}" class="btn btn-primary">
+                <i class="fa fa-edit mr-1"></i>{{#str}}action_edit, local_wsmanager{{/str}}
+            </a>
+            <a href="{{history_url}}" class="btn btn-warning">
+                <i class="fa fa-history mr-1"></i>{{#str}}version_history, local_wsmanager{{/str}}
+            </a>
+            {{#has_token}}
+            <a href="{{regenerate_url}}" class="btn btn-info">
+                <i class="fa fa-refresh mr-1"></i>{{#str}}action_regenerate_token, local_wsmanager{{/str}}
+            </a>
+            {{/has_token}}
+            {{^has_token}}
+            <a href="{{regenerate_url}}" class="btn btn-success">
+                <i class="fa fa-key mr-1"></i>{{#str}}action_generate_token, local_wsmanager{{/str}}
+            </a>
+            {{/has_token}}
+            <a href="{{delete_url}}" class="btn btn-danger float-right">
+                <i class="fa fa-trash mr-1"></i>{{#str}}action_delete, local_wsmanager{{/str}}
+            </a>
+        </div>
+        {{/can_manage}}
+    </div>
+
+    {{! Functions section }}
+    {{#has_functions}}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">{{#str}}functions, local_wsmanager{{/str}}</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>{{#str}}function_name, local_wsmanager{{/str}}</th>
+                        <th class="text-center">{{#str}}function_critical, local_wsmanager{{/str}}</th>
+                        <th class="text-center">{{#str}}function_status, local_wsmanager{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#functions}}
+                    <tr>
+                        <td><code>{{name}}</code></td>
+                        <td class="text-center">
+                            {{#critical}}<span class="badge badge-danger">{{#str}}yes{{/str}}</span>{{/critical}}
+                            {{^critical}}<span class="badge badge-secondary">{{#str}}no{{/str}}</span>{{/critical}}
+                        </td>
+                        <td class="text-center">
+                            <span class="{{status_class}}">
+                                <i class="fa {{status_icon}} mr-1"></i>{{status_label}}
+                            </span>
+                        </td>
+                    </tr>
+                    {{/functions}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/has_functions}}
+
+    {{! Provisioned resources section }}
+    {{#has_resources}}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fa fa-server mr-2"></i>{{#str}}provisioned_resources, local_wsmanager{{/str}}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {{#has_resource_user}}
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="text-muted small text-uppercase mb-1">{{#str}}service_user, local_wsmanager{{/str}}</div>
+                    <a href="{{resource_user_url}}" target="_blank">
+                        <i class="fa fa-user mr-1"></i>{{resource_user_name}}
+                    </a>
+                    <div class="text-muted small mt-1"><code>{{resource_user_username}}</code></div>
+                </div>
+                {{/has_resource_user}}
+                {{#has_resource_role}}
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="text-muted small text-uppercase mb-1">{{#str}}service_role, local_wsmanager{{/str}}</div>
+                    <a href="{{resource_role_url}}" target="_blank">
+                        <i class="fa fa-shield mr-1"></i>{{resource_role_name}}
+                    </a>
+                    <div class="text-muted small mt-1"><code>{{resource_role_shortname}}</code></div>
+                </div>
+                {{/has_resource_role}}
+                {{#has_resource_service}}
+                <div class="col-md-4">
+                    <div class="text-muted small text-uppercase mb-1">{{#str}}external_service, local_wsmanager{{/str}}</div>
+                    <a href="{{resource_service_url}}" target="_blank">
+                        <i class="fa fa-plug mr-1"></i>{{resource_service_name}}
+                    </a>
+                    <div class="text-muted small mt-1"><code>{{resource_service_shortname}}</code></div>
+                </div>
+                {{/has_resource_service}}
+            </div>
+        </div>
+    </div>
+    {{/has_resources}}
+
+    {{! Requirements section }}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">{{#str}}schema_requirements, local_wsmanager{{/str}}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 {{#has_required_plugins}}border-right{{/has_required_plugins}}">
+                    <div class="text-muted small text-uppercase mb-2">{{#str}}req_file_access, local_wsmanager{{/str}}</div>
+                    <div class="mb-1">
+                        {{#service_download_files}}
+                        <span class="badge badge-success mr-1"><i class="fa fa-download mr-1"></i>{{#str}}req_download_files, local_wsmanager{{/str}}</span>
+                        {{/service_download_files}}
+                        {{^service_download_files}}
+                        <span class="badge badge-secondary mr-1"><i class="fa fa-download mr-1"></i>{{#str}}req_download_files, local_wsmanager{{/str}}</span>
+                        {{/service_download_files}}
+                        {{#service_upload_files}}
+                        <span class="badge badge-success mr-1"><i class="fa fa-upload mr-1"></i>{{#str}}req_upload_files, local_wsmanager{{/str}}</span>
+                        {{/service_upload_files}}
+                        {{^service_upload_files}}
+                        <span class="badge badge-secondary mr-1"><i class="fa fa-upload mr-1"></i>{{#str}}req_upload_files, local_wsmanager{{/str}}</span>
+                        {{/service_upload_files}}
+                    </div>
+                </div>
+                {{#has_required_plugins}}
+                <div class="col-md-6 pl-4">
+                    <div class="text-muted small text-uppercase mb-2">{{#str}}req_plugins, local_wsmanager{{/str}}</div>
+                    {{#required_plugins}}
+                    <div class="mb-1">
+                        <span class="{{status_class}}"><i class="fa {{status_icon}} mr-1"></i></span>
+                        <code>{{name}}</code>
+                        <small class="text-muted ml-1">{{status_label}}</small>
+                    </div>
+                    {{/required_plugins}}
+                </div>
+                {{/has_required_plugins}}
+            </div>
+        </div>
+    </div>
+
+    {{! Extra capabilities section }}
+    {{#has_extra_capabilities}}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">{{#str}}extra_capabilities, local_wsmanager{{/str}}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            {{#extra_capabilities}}
+            <li class="list-group-item"><code>{{.}}</code></li>
+            {{/extra_capabilities}}
+        </ul>
+    </div>
+    {{/has_extra_capabilities}}
+
+    {{! Health logs section }}
+    {{#has_health_logs}}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{#str}}healthcheck_task, local_wsmanager{{/str}}</h5>
+            <select class="form-control form-control-sm" style="width: auto;" id="healthlog-status-filter">
+                <option value="">{{#str}}all{{/str}}</option>
+                <option value="healthy">{{#str}}status_healthy, local_wsmanager{{/str}}</option>
+                <option value="warning">{{#str}}status_warning, local_wsmanager{{/str}}</option>
+                <option value="critical">{{#str}}status_critical, local_wsmanager{{/str}}</option>
+            </select>
+        </div>
+        <div class="card-body p-0" style="max-height: 350px; overflow-y: auto;">
+            <table class="table table-sm mb-0" id="healthlog-table">
+                <thead style="position: sticky; top: 0; background: #fff; z-index: 1;">
+                    <tr>
+                        <th style="width: 200px;">{{#str}}time{{/str}}</th>
+                        <th style="width: 100px;">{{#str}}status{{/str}}</th>
+                        <th>{{#str}}message{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#health_logs}}
+                    <tr data-status="{{status}}">
+                        <td>{{time}}</td>
+                        <td><span class="badge {{status_class}}">{{status}}</span></td>
+                        <td>{{message}}</td>
+                    </tr>
+                    {{/health_logs}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/has_health_logs}}
+</div>
