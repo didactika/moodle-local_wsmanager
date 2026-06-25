@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager;
+namespace local_servicemanager;
 
 /**
  * Unit tests for user manager class.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @category   test
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \local_wsmanager\automation\user_manager
+ * @covers     \local_servicemanager\automation\user_manager
  */
 final class user_manager_test extends \advanced_testcase {
     /**
@@ -35,7 +35,7 @@ final class user_manager_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\user_manager();
+        $manager = new \local_servicemanager\automation\user_manager();
         $userid = $manager->create_service_user('test.service', 'Test Service');
 
         $this->assertIsInt($userid);
@@ -57,7 +57,7 @@ final class user_manager_test extends \advanced_testcase {
     public function test_user_exists(): void {
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\user_manager();
+        $manager = new \local_servicemanager\automation\user_manager();
 
         // User doesn't exist yet.
         $this->assertFalse($manager->user_exists(0));
@@ -76,7 +76,7 @@ final class user_manager_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\user_manager();
+        $manager = new \local_servicemanager\automation\user_manager();
 
         // Test with dots.
         $userid = $manager->create_service_user('myapp.users.v2', 'My App');
@@ -96,7 +96,7 @@ final class user_manager_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\user_manager();
+        $manager = new \local_servicemanager\automation\user_manager();
 
         // Create user.
         $userid = $manager->create_service_user('test.service', 'Test Service');

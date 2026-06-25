@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\automation;
+namespace local_servicemanager\automation;
 
 /**
  * Manager for external services
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -55,7 +55,7 @@ class service_manager {
         $service->restrictedusers = 1; // Only authorized users.
         $service->downloadfiles = (int) $downloadfiles;
         $service->uploadfiles = (int) $uploadfiles;
-        $service->component = 'local_wsmanager';
+        $service->component = 'local_servicemanager';
 
         $webservicemanager = new \webservice();
         return $webservicemanager->add_external_service($service);
@@ -163,7 +163,7 @@ class service_manager {
             if ($user) {
                 $this->authorize_user($serviceid, $user->id);
             } else {
-                $warnings[] = get_string('warning_user_email_not_found', 'local_wsmanager', $email);
+                $warnings[] = get_string('warning_user_email_not_found', 'local_servicemanager', $email);
             }
         }
 

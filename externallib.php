@@ -17,18 +17,18 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/externallib.php");
-require_once("$CFG->dirroot/local/wsmanager/classes/schema/manager.php");
+require_once("$CFG->dirroot/local/servicemanager/classes/schema/manager.php");
 
 /**
- * External API for local_wsmanager
+ * External API for local_servicemanager
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_wsmanager_external extends external_api {
+class local_servicemanager_external extends external_api {
     /**
      * Returns description of method parameters
      * @return external_function_parameters
@@ -46,9 +46,9 @@ class local_wsmanager_external extends external_api {
 
         $context = context_system::instance();
         self::validate_context($context);
-        require_capability('local/wsmanager:view', $context);
+        require_capability('local/servicemanager:view', $context);
 
-        $schemas = $DB->get_records('local_wsmanager_schemas');
+        $schemas = $DB->get_records('local_servicemanager_schemas');
         $result = [];
 
         foreach ($schemas as $schema) {
@@ -108,9 +108,9 @@ class local_wsmanager_external extends external_api {
 
         $context = context_system::instance();
         self::validate_context($context);
-        require_capability('local/wsmanager:view', $context);
+        require_capability('local/servicemanager:view', $context);
 
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $params['id']], '*', MUST_EXIST);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $params['id']], '*', MUST_EXIST);
 
         return [
             'id' => $schema->id,
@@ -170,9 +170,9 @@ class local_wsmanager_external extends external_api {
 
         $context = context_system::instance();
         self::validate_context($context);
-        require_capability('local/wsmanager:manage', $context);
+        require_capability('local/servicemanager:manage', $context);
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
 
         try {
             $parsed = $manager->validate_yaml($params['yamlcontent']);
@@ -234,9 +234,9 @@ class local_wsmanager_external extends external_api {
 
         $context = context_system::instance();
         self::validate_context($context);
-        require_capability('local/wsmanager:manage', $context);
+        require_capability('local/servicemanager:manage', $context);
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
 
         try {
             $manager->update_schema($params['id'], $params['yamlcontent']);
@@ -283,9 +283,9 @@ class local_wsmanager_external extends external_api {
 
         $context = context_system::instance();
         self::validate_context($context);
-        require_capability('local/wsmanager:manage', $context);
+        require_capability('local/servicemanager:manage', $context);
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
 
         try {
             $manager->delete_schema($params['id']);

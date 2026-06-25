@@ -1,4 +1,4 @@
-@local @local_wsmanager
+@local @local_servicemanager
 Feature: Schema import
   In order to create web services from YAML
   As an administrator
@@ -11,7 +11,7 @@ Feature: Schema import
   @javascript @_file_upload
   Scenario: Import a valid YAML schema file
     When I click on "Import Schemas" "link"
-    And I upload "local/wsmanager/examples/sample_schema.yaml" file to "Import File" filemanager
+    And I upload "local/servicemanager/examples/sample_schema.yaml" file to "Import File" filemanager
     And I press "Import"
     Then I should see "Import complete"
     And I should see "Example Service"

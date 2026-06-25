@@ -17,7 +17,7 @@
 /**
  * Delete schema page
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -28,30 +28,30 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/wsmanager:manage', $context);
+require_capability('local/servicemanager:manage', $context);
 
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/delete.php', ['id' => $id]));
-$PAGE->set_title(get_string('action_delete', 'local_wsmanager'));
-$PAGE->set_heading(get_string('action_delete', 'local_wsmanager'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/delete.php', ['id' => $id]));
+$PAGE->set_title(get_string('action_delete', 'local_servicemanager'));
+$PAGE->set_heading(get_string('action_delete', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 $schema = $manager->get_schema($id);
 
 if (!$schema) {
     redirect(
-        new moodle_url('/local/wsmanager/pages/dashboard.php'),
-        get_string('schema_not_found', 'local_wsmanager'),
+        new moodle_url('/local/servicemanager/pages/dashboard.php'),
+        get_string('schema_not_found', 'local_servicemanager'),
         null,
         \core\output\notification::NOTIFY_WARNING
     );
 }
 
-$dashboardurl = new moodle_url('/local/wsmanager/pages/dashboard.php');
+$dashboardurl = new moodle_url('/local/servicemanager/pages/dashboard.php');
 
 if ($confirm && confirm_sesskey()) {
     $schemaname = $schema->name;
@@ -59,7 +59,7 @@ if ($confirm && confirm_sesskey()) {
 
     redirect(
         $dashboardurl,
-        get_string('schema_deleted_success', 'local_wsmanager', $schemaname),
+        get_string('schema_deleted_success', 'local_servicemanager', $schemaname),
         null,
         \core\output\notification::NOTIFY_SUCCESS
     );
@@ -68,14 +68,14 @@ if ($confirm && confirm_sesskey()) {
 // Show confirmation.
 echo $OUTPUT->header();
 
-$confirmurl = new moodle_url('/local/wsmanager/pages/delete.php', [
+$confirmurl = new moodle_url('/local/servicemanager/pages/delete.php', [
     'id' => $id,
     'confirm' => 1,
     'sesskey' => sesskey(),
 ]);
 
 echo $OUTPUT->confirm(
-    get_string('confirm_delete', 'local_wsmanager', $schema->name),
+    get_string('confirm_delete', 'local_servicemanager', $schema->name),
     $confirmurl,
     $dashboardurl
 );

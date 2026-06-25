@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings for local_wsmanager
+ * Language strings for local_servicemanager
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -221,6 +221,8 @@ $string['select_all'] = 'Select all';
 $string['selected'] = 'Selected';
 $string['service_role'] = 'Service Role';
 $string['service_user'] = 'Service User';
+$string['servicemanager:manage'] = 'Manage service schemas';
+$string['servicemanager:view'] = 'View service schemas';
 $string['settings'] = 'Settings';
 $string['settings_cleanup'] = 'Log Cleanup';
 $string['settings_cleanup_desc'] = 'Configure automatic log cleanup to prevent database growth.';
@@ -266,9 +268,7 @@ $string['ws_status_disabled'] = 'Disabled';
 $string['ws_status_operational'] = 'Operational';
 $string['ws_status_panel'] = 'Web Services Status';
 $string['ws_status_warning'] = 'No protocols enabled';
-$string['wsmanager:manage'] = 'Manage service schemas';
-$string['wsmanager:view'] = 'View service schemas';
 $string['yamlcontent'] = 'YAML Content';
-$string['yamlcontent_help'] = 'Edit the YAML schema definition directly.<br><br><a href="/local/wsmanager/pages/documentation.php"><strong>📖 View Documentation</strong></a>';
+$string['yamlcontent_help'] = 'Edit the YAML schema definition directly.<br><br><a href="/local/servicemanager/pages/documentation.php"><strong>📖 View Documentation</strong></a>';
 $string['yamlfile'] = 'YAML Schema File';
-$string['yamlfile_help'] = 'Upload a YAML file containing the service schema definition. Only .yaml and .yml files are accepted.<br><br><a href="/local/wsmanager/pages/documentation.php"><strong>📖 View Documentation</strong></a>';
+$string['yamlfile_help'] = 'Upload a YAML file containing the service schema definition. Only .yaml and .yml files are accepted.<br><br><a href="/local/servicemanager/pages/documentation.php"><strong>📖 View Documentation</strong></a>';

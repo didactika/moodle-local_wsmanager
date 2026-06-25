@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\schema;
+namespace local_servicemanager\schema;
 
-use local_wsmanager\automation\capability_calculator;
+use local_servicemanager\automation\capability_calculator;
 
 /**
  * Validator for service schema definitions
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -67,21 +67,21 @@ class validator {
         $additionalusers = $this->parser->extract_additional_users($data);
 
         // Check schema ID uniqueness.
-        $existing = $DB->get_record('local_wsmanager_schemas', ['schema_id' => $meta['id']]);
+        $existing = $DB->get_record('local_servicemanager_schemas', ['schema_id' => $meta['id']]);
         if ($existing && ($excludeschemaid === null || $existing->id != $excludeschemaid)) {
-            $errors[] = get_string('error_schema_id_exists', 'local_wsmanager', $meta['id']);
+            $errors[] = get_string('error_schema_id_exists', 'local_servicemanager', $meta['id']);
         }
 
         // Check schema name uniqueness (role and service names are derived from meta.name and must be unique).
-        $existingbyname = $DB->get_record('local_wsmanager_schemas', ['name' => $meta['name']]);
+        $existingbyname = $DB->get_record('local_servicemanager_schemas', ['name' => $meta['name']]);
         if ($existingbyname && ($excludeschemaid === null || $existingbyname->id != $excludeschemaid)) {
-            $errors[] = get_string('error_schema_name_exists', 'local_wsmanager', $meta['name']);
+            $errors[] = get_string('error_schema_name_exists', 'local_servicemanager', $meta['name']);
         }
 
         // Validate required plugins.
         foreach ($requiredplugins as $plugin) {
             if (!$this->plugin_exists($plugin)) {
-                $warnings[] = get_string('warning_plugin_not_installed', 'local_wsmanager', $plugin);
+                $warnings[] = get_string('warning_plugin_not_installed', 'local_servicemanager', $plugin);
             }
         }
 
@@ -92,16 +92,16 @@ class validator {
 
             // Check for duplicates.
             if (isset($seenfunctions[$funcname])) {
-                $errors[] = get_string('error_duplicate_function', 'local_wsmanager', $funcname);
+                $errors[] = get_string('error_duplicate_function', 'local_servicemanager', $funcname);
                 continue;
             }
             $seenfunctions[$funcname] = true;
 
             if (!$this->capcalc->function_exists($funcname)) {
                 if ($func['critical']) {
-                    $errors[] = get_string('error_critical_function_missing', 'local_wsmanager', $funcname);
+                    $errors[] = get_string('error_critical_function_missing', 'local_servicemanager', $funcname);
                 } else {
-                    $warnings[] = get_string('warning_function_missing', 'local_wsmanager', $funcname);
+                    $warnings[] = get_string('warning_function_missing', 'local_servicemanager', $funcname);
                 }
             }
         }
@@ -109,7 +109,7 @@ class validator {
         // Validate additional user emails.
         foreach ($additionalusers as $email) {
             if (!$this->user_exists_by_email($email)) {
-                $warnings[] = get_string('warning_user_email_not_found', 'local_wsmanager', $email);
+                $warnings[] = get_string('warning_user_email_not_found', 'local_servicemanager', $email);
             }
         }
 
@@ -160,7 +160,7 @@ class validator {
             $data = $this->parser->parse($content);
             if ($data === null) {
                 return [
-                    'errors' => [get_string('error_invalid_yaml', 'local_wsmanager', 'Empty or invalid content')],
+                    'errors' => [get_string('error_invalid_yaml', 'local_servicemanager', 'Empty or invalid content')],
                     'warnings' => [],
                     'data' => null,
                 ];
@@ -175,7 +175,7 @@ class validator {
                 preg_match('/^\s*extra_capabilities\s*:\s*(#.*)?$/m', $content)
                     && empty($this->parser->extract_extra_capabilities($data))
             ) {
-                $result['warnings'][] = get_string('warning_extra_capabilities_empty', 'local_wsmanager');
+                $result['warnings'][] = get_string('warning_extra_capabilities_empty', 'local_servicemanager');
             }
 
             $result['data'] = $data;

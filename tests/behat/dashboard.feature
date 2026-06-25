@@ -1,4 +1,4 @@
-@local @local_wsmanager
+@local @local_servicemanager
 Feature: Schema dashboard
   In order to manage web service schemas
   As an administrator

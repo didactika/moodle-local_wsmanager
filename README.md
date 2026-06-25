@@ -1,4 +1,4 @@
-# Web Service Manager (local_wsmanager)
+# Web Service Manager (local_servicemanager)
 
 A Moodle local plugin for managing web service integrations from declarative YAML schemas.
 
@@ -96,7 +96,7 @@ The plugin keeps all Moodle resources in sync with the schema throughout its lif
 ### Method 1: Direct Download
 
 1. Download the latest release
-2. Extract it into `local/wsmanager`.
+2. Extract it into `local/servicemanager`.
 3. Visit **Site administration** in Moodle.
 4. Complete the plugin installation wizard.
 
@@ -104,7 +104,7 @@ The plugin keeps all Moodle resources in sync with the schema throughout its lif
 
 ```bash
 cd /path/to/moodle/local
-git clone https://github.com/didactika/moodle-local_wsmanager.git wsmanager
+git clone https://github.com/didactika/moodle-local_servicemanager.git servicemanager
 ```
 
 After installation, visit **Site Administration** to complete the setup.
@@ -235,20 +235,20 @@ You don't list the capabilities each function needs — the plugin reads them fr
 
 ```php
 // Schema Manager - Main entry point
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 $result = $manager->create_schema($yaml_content, $generate_token);
 $schema = $manager->get_schema($id);
 $manager->update_schema($id, $new_yaml);
 $manager->delete_schema($id);
 
 // YAML Parser
-$parser = new \local_wsmanager\schema\yaml_parser();
+$parser = new \local_servicemanager\schema\yaml_parser();
 $data = $parser->parse($yaml_content);
 $meta = $parser->extract_meta($data);
 $functions = $parser->extract_functions($data);
 
 // Validator
-$validator = new \local_wsmanager\schema\validator();
+$validator = new \local_servicemanager\schema\validator();
 $result = $validator->validate_content($yaml_content);
 // Returns: ['errors' => [...], 'warnings' => [...]]
 ```
@@ -264,22 +264,22 @@ $result = $validator->validate_content($yaml_content);
 
 The plugin exposes its own REST API so schemas can be managed programmatically — useful for CI/CD pipelines, deployment scripts, or any external tooling that needs to provision or update web services without accessing the Moodle UI.
 
-A pre-configured external service (`ws_wsmanager`) is installed automatically. Authorize a user with the `local/wsmanager:manage` capability to that service and use the token to call these functions:
+A pre-configured external service (`ws_servicemanager`) is installed automatically. Authorize a user with the `local/servicemanager:manage` capability to that service and use the token to call these functions:
 
 | Function | Type | Description |
 |----------|------|-------------|
-| `local_wsmanager_get_schemas` | read | List all schemas |
-| `local_wsmanager_get_schema` | read | Get a single schema by ID |
-| `local_wsmanager_create_schema` | write | Create a new schema from YAML content |
-| `local_wsmanager_update_schema` | write | Update an existing schema with new YAML content |
-| `local_wsmanager_delete_schema` | write | Delete a schema and all its provisioned resources |
+| `local_servicemanager_get_schemas` | read | List all schemas |
+| `local_servicemanager_get_schema` | read | Get a single schema by ID |
+| `local_servicemanager_create_schema` | write | Create a new schema from YAML content |
+| `local_servicemanager_update_schema` | write | Update an existing schema with new YAML content |
+| `local_servicemanager_delete_schema` | write | Delete a schema and all its provisioned resources |
 
 **Example — create a schema via REST:**
 
 ```bash
 curl -X POST "https://yourmoodle.example.com/webservice/rest/server.php" \
   -d "wstoken=YOUR_TOKEN" \
-  -d "wsfunction=local_wsmanager_create_schema" \
+  -d "wsfunction=local_servicemanager_create_schema" \
   -d "moodlewsrestformat=json" \
   -d "yamlcontent=meta:%0A  id: my.service%0A  ..." \
   -d "generatetoken=1"
@@ -291,10 +291,10 @@ curl -X POST "https://yourmoodle.example.com/webservice/rest/server.php" \
 
 ```bash
 # Run all plugin tests
-vendor/bin/phpunit --testsuite local_wsmanager_testsuite
+vendor/bin/phpunit --testsuite local_servicemanager_testsuite
 
 # Run specific test class
-vendor/bin/phpunit local/wsmanager/tests/yaml_parser_test.php
+vendor/bin/phpunit local/servicemanager/tests/yaml_parser_test.php
 ```
 
 ### Behat Tests
@@ -304,7 +304,7 @@ vendor/bin/phpunit local/wsmanager/tests/yaml_parser_test.php
 php admin/tool/behat/cli/init.php
 
 # Run plugin tests
-vendor/bin/behat --config /path/to/behatrun/behat.yml --tags=@local_wsmanager
+vendor/bin/behat --config /path/to/behatrun/behat.yml --tags=@local_servicemanager
 ```
 
 ### Test Coverage
@@ -380,7 +380,7 @@ Error: Critical function not found
 
 ## Support
 
-Found a bug, hit an error not covered above, or have a feature request? Please open an **[issue](https://github.com/didactika/moodle-local_wsmanager/issues)**.
+Found a bug, hit an error not covered above, or have a feature request? Please open an **[issue](https://github.com/didactika/moodle-local_servicemanager/issues)**.
 
 When reporting a bug, include your Moodle and PHP versions, the relevant schema YAML, and the exact error message so we can reproduce it quickly.
 
@@ -390,13 +390,13 @@ When reporting a bug, include your Moodle and PHP versions, the relevant schema 
 
 ```bash
 # Clone into your Moodle installation
-git clone https://github.com/didactika/moodle-local_wsmanager.git /path/to/moodle/local/wsmanager
+git clone https://github.com/didactika/moodle-local_servicemanager.git /path/to/moodle/local/servicemanager
 
 # Run tests
-vendor/bin/phpunit --testsuite local_wsmanager_testsuite
+vendor/bin/phpunit --testsuite local_servicemanager_testsuite
 
 # Run code style checks (requires PHP_CodeSniffer with Moodle standard)
-vendor/bin/phpcs --standard=moodle local/wsmanager/
+vendor/bin/phpcs --standard=moodle local/servicemanager/
 ```
 
 ### Pull Request Process
@@ -404,8 +404,8 @@ vendor/bin/phpcs --standard=moodle local/wsmanager/
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Run tests (`vendor/bin/phpunit --testsuite local_wsmanager_testsuite`)
-5. Run code checks (`vendor/bin/phpcs --standard=moodle local/wsmanager/`)
+4. Run tests (`vendor/bin/phpunit --testsuite local_servicemanager_testsuite`)
+5. Run code checks (`vendor/bin/phpcs --standard=moodle local/servicemanager/`)
 6. Commit changes (`git commit -m 'Add amazing feature'`)
 7. Push to branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request

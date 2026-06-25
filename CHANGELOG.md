@@ -20,11 +20,11 @@ Initial release.
 - Bulk enable/disable, delete, and export.
 - Schema versioning with history, diff, and rollback.
 - Scheduled health checks with email notifications and log cleanup.
-- REST API (`local_wsmanager_*`) for managing schemas programmatically.
+- REST API (`local_servicemanager_*`) for managing schemas programmatically.
 
 ### Security
 
 - Tokens shown only once; service users use non-routable emails; services restricted to authorized users; least-privilege roles.
 
-[Unreleased]: https://github.com/didactika/moodle-local_wsmanager/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/didactika/moodle-local_wsmanager/releases/tag/v1.0.0
+[Unreleased]: https://github.com/didactika/moodle-local_servicemanager/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/didactika/moodle-local_servicemanager/releases/tag/v1.0.0

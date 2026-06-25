@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager;
+namespace local_servicemanager;
 
 /**
  * Unit tests for schema validator class.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @category   test
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \local_wsmanager\schema\validator
+ * @covers     \local_servicemanager\schema\validator
  */
 final class validator_test extends \advanced_testcase {
     /**
@@ -44,7 +44,7 @@ definition:
     - core_user_get_users
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertArrayHasKey('errors', $result);
@@ -64,7 +64,7 @@ definition:
     - core_user_get_users
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);
@@ -86,7 +86,7 @@ definition:
     - core_user_get_users
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);
@@ -108,7 +108,7 @@ definition:
     - core_user_get_users
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);
@@ -128,7 +128,7 @@ meta:
   version: "1.0.0"
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);
@@ -151,7 +151,7 @@ definition:
     - moodle/user:viewdetails
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);
@@ -166,7 +166,7 @@ YAML;
         $this->resetAfterTest();
 
         // Insert a schema record.
-        $DB->insert_record('local_wsmanager_schemas', [
+        $DB->insert_record('local_servicemanager_schemas', [
             'schema_id' => 'existing.service',
             'name' => 'Existing Service',
             'version' => '1.0.0',
@@ -188,7 +188,7 @@ definition:
     - core_user_get_users
 YAML;
 
-        $validator = new \local_wsmanager\schema\validator();
+        $validator = new \local_servicemanager\schema\validator();
         $result = $validator->validate_content($yaml);
 
         $this->assertNotEmpty($result['errors']);

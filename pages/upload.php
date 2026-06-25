@@ -17,7 +17,7 @@
 /**
  * Upload page for new schemas
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -28,17 +28,17 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/wsmanager:manage', $context);
+require_capability('local/servicemanager:manage', $context);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/upload.php'));
-$PAGE->set_title(get_string('upload_schema', 'local_wsmanager'));
-$PAGE->set_heading(get_string('upload_schema', 'local_wsmanager'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/upload.php'));
+$PAGE->set_title(get_string('upload_schema', 'local_servicemanager'));
+$PAGE->set_heading(get_string('upload_schema', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
-$dashboardurl = new moodle_url('/local/wsmanager/pages/dashboard.php');
+$dashboardurl = new moodle_url('/local/servicemanager/pages/dashboard.php');
 
-$form = new \local_wsmanager\form\upload_schema_form();
+$form = new \local_servicemanager\form\upload_schema_form();
 
 if ($form->is_cancelled()) {
     redirect($dashboardurl);
@@ -48,20 +48,20 @@ if ($form->is_cancelled()) {
     $generatetoken = !empty($data->generatetoken);
 
     try {
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($content, $generatetoken);
 
         // Build success message.
-        $parser = new \local_wsmanager\schema\yaml_parser();
+        $parser = new \local_servicemanager\schema\yaml_parser();
         $yamldata = $parser->parse($content);
         $schemaname = $yamldata['meta']['name'] ?? 'Unknown';
 
-        $message = get_string('schema_created_success', 'local_wsmanager', $schemaname);
+        $message = get_string('schema_created_success', 'local_servicemanager', $schemaname);
 
         // If token was generated, show it.
         if (!empty($result['token'])) {
-            $SESSION->wsmanager_new_token = $result['token'];
-            $SESSION->wsmanager_schema_id = $result['id'];
+            $SESSION->servicemanager_new_token = $result['token'];
+            $SESSION->servicemanager_schema_id = $result['id'];
         }
 
         // Show warnings if any.
@@ -74,7 +74,7 @@ if ($form->is_cancelled()) {
         \core\notification::success($message);
 
         // Redirect to view page to show token.
-        redirect(new moodle_url('/local/wsmanager/pages/view.php', [
+        redirect(new moodle_url('/local/servicemanager/pages/view.php', [
             'id' => $result['id'],
             'newtoken' => 1,
         ]));

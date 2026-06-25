@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Data generator for local_wsmanager.
+ * Data generator for local_servicemanager.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @category   test
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
@@ -25,9 +25,9 @@
  */
 
 /**
- * Data generator class for local_wsmanager.
+ * Data generator class for local_servicemanager.
  */
-class local_wsmanager_generator extends testing_module_generator {
+class local_servicemanager_generator extends testing_module_generator {
     /** @var int Counter for unique schema IDs */
     protected $schemacount = 0;
 
@@ -76,7 +76,7 @@ YAML;
         $record->timecreated = time();
         $record->timemodified = time();
 
-        $record->id = $DB->insert_record('local_wsmanager_schemas', $record);
+        $record->id = $DB->insert_record('local_servicemanager_schemas', $record);
 
         return $record;
     }
@@ -89,7 +89,7 @@ YAML;
      * @return array Result with id and optional token.
      */
     public function create_schema_from_yaml($yaml, $generatetoken = false) {
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         return $manager->create_schema($yaml, $generatetoken);
     }
 }

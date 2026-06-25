@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\schema;
+namespace local_servicemanager\schema;
 
 /**
  * History manager for schema versioning and rollback.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class history_manager {
     /** @var string Table name for history */
-    const TABLE = 'local_wsmanager_history';
+    const TABLE = 'local_servicemanager_history';
 
     /**
      * Save a version snapshot of the schema.
@@ -109,14 +109,14 @@ class history_manager {
 
         $history = $this->get_version($historyid);
         if (!$history || $history->schemaid != $schemaid) {
-            throw new \moodle_exception('historynotfound', 'local_wsmanager');
+            throw new \moodle_exception('historynotfound', 'local_servicemanager');
         }
 
         $manager = new manager();
 
         // Save current state before rollback ONLY if it differs from the last history entry.
         // This prevents "Backup before rollback" if we are already sitting on a known history state.
-        $current = $DB->get_record('local_wsmanager_schemas', ['id' => $schemaid]);
+        $current = $DB->get_record('local_servicemanager_schemas', ['id' => $schemaid]);
         if ($current) {
             $parser = new yaml_parser();
             $currenthash = $parser->get_hash($current->yaml_content);
@@ -129,7 +129,7 @@ class history_manager {
                     $schemaid,
                     $current->version,
                     $current->yaml_content,
-                    get_string('rollback_backup', 'local_wsmanager')
+                    get_string('rollback_backup', 'local_servicemanager')
                 );
             }
         }

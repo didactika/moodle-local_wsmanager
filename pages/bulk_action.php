@@ -17,7 +17,7 @@
 /**
  * Bulk action handler for schemas.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,7 +26,7 @@
 require_once(__DIR__ . '/../../../config.php');
 
 require_login();
-require_capability('local/wsmanager:manage', context_system::instance());
+require_capability('local/servicemanager:manage', context_system::instance());
 require_sesskey();
 
 $action = required_param('action', PARAM_ALPHA);
@@ -34,14 +34,14 @@ $ids = required_param_array('ids', PARAM_INT);
 
 if (empty($ids)) {
     redirect(
-        new moodle_url('/local/wsmanager/pages/dashboard.php'),
-        get_string('no_schemas_selected', 'local_wsmanager'),
+        new moodle_url('/local/servicemanager/pages/dashboard.php'),
+        get_string('no_schemas_selected', 'local_servicemanager'),
         null,
         \core\output\notification::NOTIFY_WARNING
     );
 }
 
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 
 switch ($action) {
     case 'enable':
@@ -50,7 +50,7 @@ switch ($action) {
             $manager->set_enabled($id, true);
             $count++;
         }
-        $message = get_string('bulk_enabled', 'local_wsmanager', $count);
+        $message = get_string('bulk_enabled', 'local_servicemanager', $count);
         $notifytype = \core\output\notification::NOTIFY_SUCCESS;
         break;
 
@@ -60,7 +60,7 @@ switch ($action) {
             $manager->set_enabled($id, false);
             $count++;
         }
-        $message = get_string('bulk_disabled', 'local_wsmanager', $count);
+        $message = get_string('bulk_disabled', 'local_servicemanager', $count);
         $notifytype = \core\output\notification::NOTIFY_SUCCESS;
         break;
 
@@ -76,10 +76,10 @@ switch ($action) {
             }
         }
         if ($errors > 0) {
-            $message = get_string('bulk_deleted_with_errors', 'local_wsmanager', ['count' => $count, 'errors' => $errors]);
+            $message = get_string('bulk_deleted_with_errors', 'local_servicemanager', ['count' => $count, 'errors' => $errors]);
             $notifytype = \core\output\notification::NOTIFY_WARNING;
         } else {
-            $message = get_string('bulk_deleted', 'local_wsmanager', $count);
+            $message = get_string('bulk_deleted', 'local_servicemanager', $count);
             $notifytype = \core\output\notification::NOTIFY_SUCCESS;
         }
         break;
@@ -88,14 +88,14 @@ switch ($action) {
         // Export selected as ZIP.
         global $DB, $CFG;
 
-        $tempdir = make_temp_directory('wsmanager_export');
+        $tempdir = make_temp_directory('servicemanager_export');
         $zipfilepath = $tempdir . '/schemas_selected_' . date('Ymd_His') . '.zip';
 
         $zip = new ZipArchive();
         if ($zip->open($zipfilepath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             redirect(
-                new moodle_url('/local/wsmanager/pages/dashboard.php'),
-                get_string('export_error', 'local_wsmanager'),
+                new moodle_url('/local/servicemanager/pages/dashboard.php'),
+                get_string('export_error', 'local_servicemanager'),
                 null,
                 \core\output\notification::NOTIFY_ERROR
             );
@@ -137,12 +137,12 @@ switch ($action) {
         exit;
 
     default:
-        $message = get_string('invalid_action', 'local_wsmanager');
+        $message = get_string('invalid_action', 'local_servicemanager');
         $notifytype = \core\output\notification::NOTIFY_ERROR;
 }
 
 redirect(
-    new moodle_url('/local/wsmanager/pages/dashboard.php'),
+    new moodle_url('/local/servicemanager/pages/dashboard.php'),
     $message,
     null,
     $notifytype

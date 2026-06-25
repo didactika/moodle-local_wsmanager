@@ -17,7 +17,7 @@
 /**
  * Edit page for existing schemas
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -28,32 +28,32 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/wsmanager:manage', $context);
+require_capability('local/servicemanager:manage', $context);
 
 $id = required_param('id', PARAM_INT);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/edit.php', ['id' => $id]));
-$PAGE->set_title(get_string('edit_schema', 'local_wsmanager'));
-$PAGE->set_heading(get_string('edit_schema', 'local_wsmanager'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/edit.php', ['id' => $id]));
+$PAGE->set_title(get_string('edit_schema', 'local_servicemanager'));
+$PAGE->set_heading(get_string('edit_schema', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 $schema = $manager->get_schema($id);
 
 if (!$schema) {
     redirect(
-        new moodle_url('/local/wsmanager/pages/dashboard.php'),
-        get_string('schema_not_found', 'local_wsmanager'),
+        new moodle_url('/local/servicemanager/pages/dashboard.php'),
+        get_string('schema_not_found', 'local_servicemanager'),
         null,
         \core\output\notification::NOTIFY_WARNING
     );
 }
 
-$dashboardurl = new moodle_url('/local/wsmanager/pages/dashboard.php');
-$viewurl = new moodle_url('/local/wsmanager/pages/view.php', ['id' => $id]);
+$dashboardurl = new moodle_url('/local/servicemanager/pages/dashboard.php');
+$viewurl = new moodle_url('/local/servicemanager/pages/view.php', ['id' => $id]);
 
-$form = new \local_wsmanager\form\edit_schema_form(null, ['schema' => $schema]);
+$form = new \local_servicemanager\form\edit_schema_form(null, ['schema' => $schema]);
 
 // Set default values.
 $form->set_data([
@@ -78,7 +78,7 @@ if ($form->is_cancelled()) {
             }
         }
 
-        \core\notification::success(get_string('schema_updated_success', 'local_wsmanager', $schema->name));
+        \core\notification::success(get_string('schema_updated_success', 'local_servicemanager', $schema->name));
         redirect($viewurl);
     } catch (\Exception $e) {
         \core\notification::error($e->getMessage());

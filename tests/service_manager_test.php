@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager;
+namespace local_servicemanager;
 
 /**
  * Unit tests for service manager class.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @category   test
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \local_wsmanager\automation\service_manager
+ * @covers     \local_servicemanager\automation\service_manager
  */
 final class service_manager_test extends \advanced_testcase {
     /**
@@ -35,7 +35,7 @@ final class service_manager_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\service_manager();
+        $manager = new \local_servicemanager\automation\service_manager();
         $serviceid = $manager->create_external_service('test.service', 'Test Service');
 
         $this->assertIsInt($serviceid);
@@ -58,7 +58,7 @@ final class service_manager_test extends \advanced_testcase {
     public function test_service_exists(): void {
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\service_manager();
+        $manager = new \local_servicemanager\automation\service_manager();
 
         // Service doesn't exist yet.
         $this->assertFalse($manager->service_exists(0));
@@ -77,7 +77,7 @@ final class service_manager_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\service_manager();
+        $manager = new \local_servicemanager\automation\service_manager();
 
         // Create service.
         $serviceid = $manager->create_external_service('test.service', 'Test Service');
@@ -105,7 +105,7 @@ final class service_manager_test extends \advanced_testcase {
         // Create a test user.
         $user = $this->getDataGenerator()->create_user();
 
-        $manager = new \local_wsmanager\automation\service_manager();
+        $manager = new \local_servicemanager\automation\service_manager();
 
         // Create service.
         $serviceid = $manager->create_external_service('test.service', 'Test Service');
@@ -127,7 +127,7 @@ final class service_manager_test extends \advanced_testcase {
     public function test_delete_service(): void {
         $this->resetAfterTest();
 
-        $manager = new \local_wsmanager\automation\service_manager();
+        $manager = new \local_servicemanager\automation\service_manager();
 
         // Create service.
         $serviceid = $manager->create_external_service('test.service', 'Test Service');

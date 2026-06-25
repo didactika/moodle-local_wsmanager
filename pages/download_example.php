@@ -17,7 +17,7 @@
 /**
  * Download example YAML file
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -27,7 +27,7 @@
 require_once(__DIR__ . '/../../../config.php');
 
 require_login();
-require_capability('local/wsmanager:view', context_system::instance());
+require_capability('local/servicemanager:view', context_system::instance());
 
 $filepath = __DIR__ . '/../examples/sample_schema.yaml';
 

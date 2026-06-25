@@ -17,19 +17,19 @@
 /**
  * Custom uninstall cleanup
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_local_wsmanager_uninstall() {
+function xmldb_local_servicemanager_uninstall() {
     global $DB;
 
     // We need to delete all resources created by the schemas (users, roles, services).
     // The tables will be dropped automatically by Moodle after this function returns.
 
     try {
-        if ($schemas = $DB->get_records('local_wsmanager_schemas')) {
-            $manager = new \local_wsmanager\schema\manager();
+        if ($schemas = $DB->get_records('local_servicemanager_schemas')) {
+            $manager = new \local_servicemanager\schema\manager();
             foreach ($schemas as $schema) {
                 // Delete schema resources.
                 // We use the manager's delete_schema method which handles cleaning up
@@ -39,7 +39,7 @@ function xmldb_local_wsmanager_uninstall() {
         }
     } catch (Exception $e) {
         // Log error but allow uninstall to proceed.
-        debugging('Error cleaning up local_wsmanager resources: ' . $e->getMessage());
+        debugging('Error cleaning up local_servicemanager resources: ' . $e->getMessage());
     }
 
     return true;

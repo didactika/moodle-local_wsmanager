@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for local_wsmanager
+ * Capability definitions for local_servicemanager
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'local/wsmanager:manage' => [
+    'local/servicemanager:manage' => [
         'riskbitmask' => RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
@@ -35,7 +35,7 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
-    'local/wsmanager:view' => [
+    'local/servicemanager:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [

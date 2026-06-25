@@ -17,7 +17,7 @@
 /**
  * View page for historical schema details
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -28,32 +28,32 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/wsmanager:view', $context);
+require_capability('local/servicemanager:view', $context);
 
 $historyid = required_param('historyid', PARAM_INT);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/view_history.php', ['historyid' => $historyid]));
-$PAGE->set_title(get_string('view_schema', 'local_wsmanager'));
-$PAGE->set_heading(get_string('view_schema', 'local_wsmanager'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/view_history.php', ['historyid' => $historyid]));
+$PAGE->set_title(get_string('view_schema', 'local_servicemanager'));
+$PAGE->set_heading(get_string('view_schema', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
-$historymanager = new \local_wsmanager\schema\history_manager();
+$historymanager = new \local_servicemanager\schema\history_manager();
 $history = $historymanager->get_version($historyid);
 
 if (!$history) {
-    throw new moodle_exception('historynotfound', 'local_wsmanager');
+    throw new moodle_exception('historynotfound', 'local_servicemanager');
 }
 
 // Parse historical YAML for display.
-$parser = new \local_wsmanager\schema\yaml_parser();
+$parser = new \local_servicemanager\schema\yaml_parser();
 $yamldata = $parser->parse($history->yaml_content);
 $meta = $parser->extract_meta($yamldata);
 $functions = $parser->extract_functions($yamldata);
 $extracaps = $parser->extract_extra_capabilities($yamldata);
 
 // Get calculated capabilities (based on current system state, which is fine for "what would imply").
-$capcalc = new \local_wsmanager\automation\capability_calculator();
+$capcalc = new \local_servicemanager\automation\capability_calculator();
 
 // Build functions data.
 $functionsdata = [];
@@ -62,12 +62,12 @@ foreach ($functions as $func) {
     $functionsdata[] = [
         'name' => $func['name'],
         'critical' => $func['critical'],
-        'critical_label' => $func['critical'] ? get_string('function_critical', 'local_wsmanager') : '',
+        'critical_label' => $func['critical'] ? get_string('function_critical', 'local_servicemanager') : '',
         'exists' => $exists,
         'status_class' => $exists ? 'text-success' : 'text-danger',
         'status_icon' => $exists ? 'fa-check' : 'fa-times',
-        'status_label' => $exists ? get_string('function_exists', 'local_wsmanager')
-            : get_string('function_missing', 'local_wsmanager'),
+        'status_label' => $exists ? get_string('function_exists', 'local_servicemanager')
+            : get_string('function_missing', 'local_servicemanager'),
     ];
 }
 
@@ -80,7 +80,7 @@ $templatedata = [
     'description' => $meta['description'],
     'maintainer' => $meta['maintainer'],
     'status' => 'history', // Just a placeholder.
-    'status_label' => get_string('version', 'local_wsmanager') . ' ' . $history->version,
+    'status_label' => get_string('version', 'local_servicemanager') . ' ' . $history->version,
     'status_class' => 'badge-secondary',
     'status_icon' => 'fa-clock-o',
     'enabled' => false, // Irrelevant for history.
@@ -101,11 +101,11 @@ $templatedata = [
     'delete_url' => '',
     'regenerate_url' => '',
     'dashboard_url' => '',
-    'back_url' => (new moodle_url('/local/wsmanager/pages/history.php', ['id' => $history->schemaid]))->out(false),
+    'back_url' => (new moodle_url('/local/servicemanager/pages/history.php', ['id' => $history->schemaid]))->out(false),
 ];
 
 // Start output.
 echo $OUTPUT->header();
 
-echo $OUTPUT->render_from_template('local_wsmanager/schema_detail', $templatedata);
+echo $OUTPUT->render_from_template('local_servicemanager/schema_detail', $templatedata);
 echo $OUTPUT->footer();

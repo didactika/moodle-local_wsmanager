@@ -1,25 +1,25 @@
-<div class="wsmanager-history-page">
+<div class="servicemanager-history-page">
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <a href="{{backurl}}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_wsmanager{{/str}}
+            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_servicemanager{{/str}}
         </a>
 
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="historyFiltersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-filter mr-1"></i>{{#str}}filters, local_wsmanager{{/str}}
+                <i class="fa fa-filter mr-1"></i>{{#str}}filters, local_servicemanager{{/str}}
                 {{#hasfilters}} <span class="badge badge-primary ml-1">{{filtercount}}</span>{{/hasfilters}}
             </button>
-            <div class="wsmanager-filter-dropdown dropdown-menu dropdown-menu-right p-3" style="min-width: 280px;" aria-labelledby="historyFiltersDropdown">
-                <form method="get" action="" id="history-filter-form" class="wsmanager-filter-form">
+            <div class="servicemanager-filter-dropdown dropdown-menu dropdown-menu-right p-3" style="min-width: 280px;" aria-labelledby="historyFiltersDropdown">
+                <form method="get" action="" id="history-filter-form" class="servicemanager-filter-form">
                     <input type="hidden" name="id" value="{{id}}">
                     
                     <div class="mb-3">
-                        <label for="filter-version">{{#str}}filter_version, local_wsmanager{{/str}}</label>
-                        <input type="text" class="form-control" id="filter-version" name="version" value="{{filterversion}}" placeholder="{{#str}}filter_version, local_wsmanager{{/str}}">
+                        <label for="filter-version">{{#str}}filter_version, local_servicemanager{{/str}}</label>
+                        <input type="text" class="form-control" id="filter-version" name="version" value="{{filterversion}}" placeholder="{{#str}}filter_version, local_servicemanager{{/str}}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="filter-perpage">{{#str}}filter_per_page, local_wsmanager{{/str}}</label>
+                        <label for="filter-perpage">{{#str}}filter_per_page, local_servicemanager{{/str}}</label>
                         <select class="form-control" id="filter-perpage" name="perpage">
                             {{#perpageoptions}}
                                 <option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>
@@ -28,12 +28,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="filter-datefrom">{{#str}}filter_date_from, local_wsmanager{{/str}}</label>
+                        <label for="filter-datefrom">{{#str}}filter_date_from, local_servicemanager{{/str}}</label>
                         <input type="date" class="form-control" id="filter-datefrom" name="datefrom_date" value="{{datefromval}}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="filter-dateto">{{#str}}filter_date_to, local_wsmanager{{/str}}</label>
+                        <label for="filter-dateto">{{#str}}filter_date_to, local_servicemanager{{/str}}</label>
                         <input type="date" class="form-control" id="filter-dateto" name="dateto_date" value="{{datetoval}}">
                     </div>
 
@@ -44,10 +44,10 @@
 
                     <div class="d-flex justify-content-between">
                         <a href="{{clearurl}}" class="btn btn-secondary">
-                            <i class="fa fa-times mr-1"></i>{{#str}}filter_clear, local_wsmanager{{/str}}
+                            <i class="fa fa-times mr-1"></i>{{#str}}filter_clear, local_servicemanager{{/str}}
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-check mr-1"></i>{{#str}}filter_apply, local_wsmanager{{/str}}
+                            <i class="fa fa-check mr-1"></i>{{#str}}filter_apply, local_servicemanager{{/str}}
                         </button>
                     </div>
                 </form>
@@ -60,47 +60,47 @@
         <div class="card-body d-flex justify-content-between align-items-center">
             <div>
                 <div class="d-flex align-items-center mb-1">
-                    <h4 class="m-0 mr-3">{{#str}}version, local_wsmanager{{/str}} {{version}}</h4>
-                    <span class="badge badge-success">{{#str}}current, local_wsmanager{{/str}}</span>
+                    <h4 class="m-0 mr-3">{{#str}}version, local_servicemanager{{/str}} {{version}}</h4>
+                    <span class="badge badge-success">{{#str}}current, local_servicemanager{{/str}}</span>
                 </div>
-                <div class="text-muted">{{#str}}schema_modified, local_wsmanager{{/str}}: {{timemodified}}</div>
+                <div class="text-muted">{{#str}}schema_modified, local_servicemanager{{/str}}: {{timemodified}}</div>
             </div>
             <div class="text-right">
                 <a href="{{editurl}}" class="btn btn-outline-primary">
-                    <i class="fa fa-pencil mr-1"></i>{{#str}}edit, local_wsmanager{{/str}}
+                    <i class="fa fa-pencil mr-1"></i>{{#str}}edit, local_servicemanager{{/str}}
                 </a>
             </div>
         </div>
     </div>
     {{/currentversion}}
 
-    <div class="wsmanager-history">
+    <div class="servicemanager-history">
         <form action="{{compareaction}}" method="get">
             <input type="hidden" name="id" value="{{id}}">
             <div class="mb-3 text-right">
                 <button type="submit" id="compare-btn" class="btn btn-primary" disabled>
-                    {{#str}}compare_versions, local_wsmanager{{/str}}
+                    {{#str}}compare_versions, local_servicemanager{{/str}}
                 </button>
             </div>
 
             {{#nohistory}}
                 <div class="alert alert-info">
-                    {{#hasfilters}}{{#str}}no_schemas_filtered, local_wsmanager{{/str}}{{/hasfilters}}
-                    {{^hasfilters}}{{#str}}no_history, local_wsmanager{{/str}}{{/hasfilters}}
+                    {{#hasfilters}}{{#str}}no_schemas_filtered, local_servicemanager{{/str}}{{/hasfilters}}
+                    {{^hasfilters}}{{#str}}no_history, local_servicemanager{{/str}}{{/hasfilters}}
                 </div>
             {{/nohistory}}
 
             {{^nohistory}}
-                <p>{{#str}}history_count, local_wsmanager, {{totalcount}}{{/str}}</p>
+                <p>{{#str}}history_count, local_servicemanager, {{totalcount}}{{/str}}</p>
                 
                                 <table class="generaltable table table-hover">
                     <thead>
                         <tr>
-                            <th class="text-center" style="width: 5%;">{{#str}}selected, local_wsmanager{{/str}}</th>
-                            <th style="width: 10%;">{{#str}}version, local_wsmanager{{/str}}</th>
-                            <th style="width: 25%;">{{#str}}modified, local_wsmanager{{/str}}</th>
-                            <th style="width: 40%;">{{#str}}description, local_wsmanager{{/str}}</th>
-                            <th class="text-right" style="width: 20%;">{{#str}}actions, local_wsmanager{{/str}}</th>
+                            <th class="text-center" style="width: 5%;">{{#str}}selected, local_servicemanager{{/str}}</th>
+                            <th style="width: 10%;">{{#str}}version, local_servicemanager{{/str}}</th>
+                            <th style="width: 25%;">{{#str}}modified, local_servicemanager{{/str}}</th>
+                            <th style="width: 40%;">{{#str}}description, local_servicemanager{{/str}}</th>
+                            <th class="text-right" style="width: 20%;">{{#str}}actions, local_servicemanager{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,7 +120,7 @@
                                 {{/change_reason}}
                                 
                                 <a class="btn btn-sm btn-link pl-0 text-left toggle-yaml-btn" href="#" data-target="yaml-content-{{id}}">
-                                    <i class="fa fa-code mr-1"></i>{{#str}}view_yaml, local_wsmanager{{/str}}
+                                    <i class="fa fa-code mr-1"></i>{{#str}}view_yaml, local_servicemanager{{/str}}
                                 </a>
                                 <div id="yaml-content-{{id}}" style="display: none; margin-top: 5px;">
                                     <pre class="bg-light p-2 rounded small m-0" style="max-height: 200px; overflow-y: auto;"><code>{{yaml_content}}</code></pre>
@@ -128,11 +128,11 @@
                             </td>
                             <td class="text-right">
                                 {{#rollback_url}}
-                                <a href="{{rollback_url}}" class="btn btn-sm btn-outline-warning mr-1" title="{{#str}}rollback, local_wsmanager{{/str}}">
-                                    <i class="fa fa-undo mr-1"></i>{{#str}}rollback, local_wsmanager{{/str}}
+                                <a href="{{rollback_url}}" class="btn btn-sm btn-outline-warning mr-1" title="{{#str}}rollback, local_servicemanager{{/str}}">
+                                    <i class="fa fa-undo mr-1"></i>{{#str}}rollback, local_servicemanager{{/str}}
                                 </a>
                                 {{/rollback_url}}
-                                <a href="{{view_url}}" class="btn btn-sm btn-secondary" title="{{#str}}action_view, local_wsmanager{{/str}}">
+                                <a href="{{view_url}}" class="btn btn-sm btn-secondary" title="{{#str}}action_view, local_servicemanager{{/str}}">
                                     <i class="fa fa-info-circle"></i>
                                 </a>
                             </td>

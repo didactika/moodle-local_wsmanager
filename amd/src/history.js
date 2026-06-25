@@ -5,7 +5,7 @@
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @module     local_wsmanager/history
+ * @module     local_servicemanager/history
  */
 
 import $ from 'jquery';
@@ -17,7 +17,7 @@ import Notification from 'core/notification';
  */
 export const init = () => {
     const compareBtn = $('#compare-btn');
-    const container = $('.wsmanager-history'); // Main container
+    const container = $('.servicemanager-history'); // Main container
 
     // Use event delegation for checkboxes since they might be inside a dynamic table or late-bound
     container.on('change', '.compare-checkbox', function () {
@@ -25,7 +25,7 @@ export const init = () => {
 
         if (checked.length > 2) {
             $(this).prop('checked', false); // Uncheck the one just clicked
-            getString('compare_select_two', 'local_wsmanager').then(s => {
+            getString('compare_select_two', 'local_servicemanager').then(s => {
                 Notification.alert('', s);
             });
             // Re-calculate checked after unchecking
@@ -73,7 +73,7 @@ export const init = () => {
     }
 
     // Keep dropdown open on click inside.
-    $('.wsmanager-filter-dropdown').on('click', function (e) {
+    $('.servicemanager-filter-dropdown').on('click', function (e) {
         e.stopPropagation();
     });
 };

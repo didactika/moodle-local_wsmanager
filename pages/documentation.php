@@ -17,7 +17,7 @@
 /**
  * Schema documentation page
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -27,25 +27,25 @@
 require_once(__DIR__ . '/../../../config.php');
 
 require_login();
-require_capability('local/wsmanager:view', context_system::instance());
+require_capability('local/servicemanager:view', context_system::instance());
 
 $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/documentation.php'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/documentation.php'));
 $PAGE->set_context(context_system::instance());
-$PAGE->set_title(get_string('pluginname', 'local_wsmanager') . ' - ' . get_string('documentation', 'local_wsmanager'));
-$PAGE->set_heading(get_string('documentation', 'local_wsmanager'));
+$PAGE->set_title(get_string('pluginname', 'local_servicemanager') . ' - ' . get_string('documentation', 'local_servicemanager'));
+$PAGE->set_heading(get_string('documentation', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
 // Navigation.
-$PAGE->navbar->add(get_string('pluginname', 'local_wsmanager'), new moodle_url('/local/wsmanager/pages/dashboard.php'));
-$PAGE->navbar->add(get_string('documentation', 'local_wsmanager'));
+$PAGE->navbar->add(get_string('pluginname', 'local_servicemanager'), new moodle_url('/local/servicemanager/pages/dashboard.php'));
+$PAGE->navbar->add(get_string('documentation', 'local_servicemanager'));
 
 echo $OUTPUT->header();
 
 // Back button URL.
-$backurl = !empty($returnurl) ? $returnurl : new moodle_url('/local/wsmanager/pages/dashboard.php');
-$downloadurl = new moodle_url('/local/wsmanager/pages/download_example.php');
+$backurl = !empty($returnurl) ? $returnurl : new moodle_url('/local/servicemanager/pages/dashboard.php');
+$downloadurl = new moodle_url('/local/servicemanager/pages/download_example.php');
 
 // Define parameters for template.
 $structurecode = <<<'YAML'
@@ -96,6 +96,6 @@ $context = [
     'function_code' => $funccode,
 ];
 
-echo $OUTPUT->render_from_template('local_wsmanager/documentation_page', $context);
+echo $OUTPUT->render_from_template('local_servicemanager/documentation_page', $context);
 
 echo $OUTPUT->footer();
