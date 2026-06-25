@@ -42,7 +42,7 @@ $form = new \local_wsmanager\form\upload_schema_form();
 
 if ($form->is_cancelled()) {
     redirect($dashboardurl);
-} elseif ($data = $form->get_data()) {
+} else if ($data = $form->get_data()) {
     // Get file content.
     $content = $form->get_yaml_file_content('yamlfile');
     $generatetoken = !empty($data->generatetoken);
@@ -78,7 +78,6 @@ if ($form->is_cancelled()) {
             'id' => $result['id'],
             'newtoken' => 1,
         ]));
-
     } catch (\Exception $e) {
         \core\notification::error($e->getMessage());
     }

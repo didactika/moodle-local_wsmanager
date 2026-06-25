@@ -16,8 +16,6 @@
 
 namespace local_wsmanager\automation;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for web service tokens
  *
@@ -28,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class token_manager {
-
     /**
      * Generate a token for user and service
      *

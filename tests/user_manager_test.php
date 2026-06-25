@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for user manager class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\automation\user_manager
  */
 final class user_manager_test extends \advanced_testcase {
-
     /**
      * Test creating a service user.
      */
@@ -49,7 +46,7 @@ final class user_manager_test extends \advanced_testcase {
         $this->assertNotFalse($user);
         $this->assertEquals('ws.test.service', $user->username);
         $this->assertStringStartsWith('ws.test.service@devnull.', $user->email);
-        // firstname is always the fixed marker; lastname carries the display name.
+        // Firstname is always the fixed marker; lastname carries the display name.
         $this->assertEquals('User Webservice', $user->firstname);
         $this->assertEquals('Test Service', $user->lastname);
     }

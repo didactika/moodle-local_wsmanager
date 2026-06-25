@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Custom uninstall cleanup
+ *
+ * @package    local_wsmanager
+ * @copyright  2026 Didactika.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 function xmldb_local_wsmanager_uninstall() {
     global $DB;
 
     // We need to delete all resources created by the schemas (users, roles, services).
     // The tables will be dropped automatically by Moodle after this function returns.
-    
+
     try {
         if ($schemas = $DB->get_records('local_wsmanager_schemas')) {
             $manager = new \local_wsmanager\schema\manager();

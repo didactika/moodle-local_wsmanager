@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
  * Local wsmanager behat context class.
  */
 class behat_local_wsmanager extends behat_base {
-
     /**
      * Create a schema for testing.
      *

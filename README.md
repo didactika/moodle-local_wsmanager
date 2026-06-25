@@ -1,4 +1,4 @@
-# Web Service Manager
+# Web Service Manager (local_wsmanager)
 
 A Moodle local plugin for managing web service integrations from declarative YAML schemas.
 
@@ -24,7 +24,9 @@ Web Service Manager lets administrators define a complete Moodle web service set
 - [Testing](#testing)
 - [Security](#security)
 - [Troubleshooting](#troubleshooting)
+- [Support](#support)
 - [Contributing](#contributing)
+- [Featured Contributors](#featured-contributors)
 - [License](#license)
 
 ## Overview
@@ -65,7 +67,7 @@ The plugin keeps all Moodle resources in sync with the schema throughout its lif
 - **Reproducibility**: Schema files can be version-controlled and deployed identically across environments
 - **Documentation**: YAML files serve as self-documenting service configurations — the schema is the spec
 - **Auditability**: Version history, health check logs, and YAML diffs give a complete record of every change
-- **Automation**: Import schemas via ZIP archive, integrate provisioning into CI/CD pipelines, or manage schemas programmatically via the plugin's own REST web service API
+- **Automation**: Import schemas via ZIP archive, integrate provisioning into CI/CD pipelines, or manage schemas programmatically via the plugin's own web service API
 
 ## Features
 
@@ -105,16 +107,6 @@ cd /path/to/moodle/local
 git clone https://github.com/didactika/moodle-local_wsmanager.git wsmanager
 ```
 
-### Method 3: Composer
-
-```json
-{
-  "require": {
-    "your-org/moodle-local_wsmanager": "^1.0"
-  }
-}
-```
-
 After installation, visit **Site Administration** to complete the setup.
 
 ## Usage
@@ -147,7 +139,7 @@ Click on a schema name to view:
 
 ### Managing Versions
 
-1. Click on **Version History** while viewing an specific schema
+1. Click on **Version History** while viewing a specific schema
 2. View past versions and their changes
 3. Select two versions and Click **"Compare Versions"** to view the definitions difference.
 4. Click **"Rollback"** to restore a previous version
@@ -197,46 +189,17 @@ definition:
     - apiuser@example.com
 ```
 
-### Field Reference
+### In Short
 
-#### Meta Section (Required)
+A schema has three sections:
 
-| Field | Required | Description |
-|-------|:--------:|-------------|
-| `id` | ✅ | Unique identifier. Only letters, numbers, and dots (.). Max 50 characters. |
-| `name` | ✅ | Human-readable display name |
-| `version` | ✅ | Semantic version string (e.g., "1.0.0") |
-| `maintainer` | ❌ | Responsible person or team |
-| `description` | ❌ | Brief description of the service |
+- **`meta`** — who the service is: `id`, `name`, and `version` (required), plus optional `maintainer` and `description`.
+- **`requirements`** *(optional)* — plugins the service needs, and whether it may download or upload files.
+- **`definition`** — the `functions` the service exposes (required), plus optional `extra_capabilities` and `additional_users`.
 
-#### Requirements Section (Optional)
+You don't list the capabilities each function needs — the plugin reads them from Moodle and assigns them automatically, and `webservice/rest:use` / `webservice/soap:use` are always included. When a schema is created it also provisions a user, role, service, and token following fixed naming patterns.
 
-| Field | Required | Description |
-|---|:---:|---|
-| `plugins` | ❌ | List of plugins that must be installed |
-| `download_files` | ❌ | Whether the service may download files. Defaults to `false`. |
-| `upload_files` | ❌ | Whether the service may upload files. Defaults to `false`. |
-
-#### Definition Section (Required)
-
-| Field | Required | Description |
-|-------|:--------:|-------------|
-| `functions` | ✅ | Array of web service function names |
-| `extra_capabilities` | ❌ | Additional Moodle capabilities to assign |
-| `additional_users` | ❌ | Email addresses of users to authorize |
-
-### Naming Conventions
-
-When a schema is created, resources follow these patterns:
-
-| Resource | Pattern | Example |
-|----------|---------|---------|
-| Username | `ws.{id}` | `ws.myapp.users` |
-| Display name | `User Webservice {name}` | `User Webservice My Application` |
-| Email | `ws.{id}@devnull.{domain}` | `ws.myapp.users@devnull.campus.edu` |
-| Role shortname | `ws_{id}` (dots → underscores) | `ws_myapp_users` |
-| Service shortname | `ws_{id}` | `ws_myapp_users` |
-| Token Name | `Token - {name}` | `Token - My Application` |
+> 📖 For the complete field-by-field reference, validation rules, naming conventions, and notes on special capabilities, see **[docs/schema_reference.md](docs/schema_reference.md)** — the single source of truth for the schema format.
 
 ## Configuration
 
@@ -281,8 +244,8 @@ $manager->delete_schema($id);
 // YAML Parser
 $parser = new \local_wsmanager\schema\yaml_parser();
 $data = $parser->parse($yaml_content);
-$meta = $parser->get_meta($data);
-$functions = $parser->get_functions($data);
+$meta = $parser->extract_meta($data);
+$functions = $parser->extract_functions($data);
 
 // Validator
 $validator = new \local_wsmanager\schema\validator();
@@ -415,6 +378,12 @@ Error: Critical function not found
 → Install required plugin or set critical: false
 ```
 
+## Support
+
+Found a bug, hit an error not covered above, or have a feature request? Please open an **[issue](https://github.com/didactika/moodle-local_wsmanager/issues)**.
+
+When reporting a bug, include your Moodle and PHP versions, the relevant schema YAML, and the exact error message so we can reproduce it quickly.
+
 ## Contributing
 
 ### Development Setup
@@ -448,10 +417,27 @@ vendor/bin/phpcs --standard=moodle local/wsmanager/
 - Write tests for new functionality
 - Update documentation as needed
 
+## Featured Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/E2RD0">
+        <img src="https://github.com/E2RD0.png" width="100" height="100" alt="E2RD0" /><br />
+        <sub><b>Eduardo Estrada</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/hector-ae21">
+        <img src="https://github.com/hector-ae21.png" width="100" height="100" alt="hector-ae21" /><br />
+        <sub><b>Hector Arrechea</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## License
 
 This plugin is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0) or later.
 
----
-
-**Made with ❤️ for the Moodle community**
+**© Didactika.org - Made with ❤️ for the Moodle community**

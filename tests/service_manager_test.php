@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for service manager class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\automation\service_manager
  */
 final class service_manager_test extends \advanced_testcase {
-
     /**
      * Test creating an external service.
      */

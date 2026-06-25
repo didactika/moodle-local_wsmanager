@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for schema validator class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\schema\validator
  */
 final class validator_test extends \advanced_testcase {
-
     /**
      * Test validating complete valid content.
      */

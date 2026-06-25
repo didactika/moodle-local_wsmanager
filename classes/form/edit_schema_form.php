@@ -30,7 +30,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class edit_schema_form extends \moodleform {
-
     /**
      * Form definition
      */
@@ -41,7 +40,7 @@ class edit_schema_form extends \moodleform {
         $docurl = new \moodle_url('/local/wsmanager/pages/documentation.php');
         $doclink = \html_writer::link(
             $docurl,
-            \html_writer::tag('i', '', ['class' => 'fa fa-book mr-2']) . 
+            \html_writer::tag('i', '', ['class' => 'fa fa-book mr-2']) .
             get_string('view_documentation', 'local_wsmanager'),
             ['class' => 'text-primary font-weight-bold ml-2']
         );
@@ -62,15 +61,21 @@ class edit_schema_form extends \moodleform {
         // Read-only schema ID display.
         if (!empty($this->_customdata['schema'])) {
             $schema = $this->_customdata['schema'];
-            $mform->addElement('static', 'schema_id_display',
+            $mform->addElement(
+                'static',
+                'schema_id_display',
                 get_string('schema_id', 'local_wsmanager'),
                 $schema->schema_id
             );
-            $mform->addElement('static', 'schema_version_display',
+            $mform->addElement(
+                'static',
+                'schema_version_display',
                 get_string('schema_version', 'local_wsmanager'),
                 $schema->version
             );
-            $mform->addElement('advcheckbox', 'enabled',
+            $mform->addElement(
+                'advcheckbox',
+                'enabled',
                 get_string('schema_enabled', 'local_wsmanager'),
                 '',
                 null,
@@ -91,7 +96,10 @@ class edit_schema_form extends \moodleform {
         $mform->addHelpButton('yaml_content', 'yamlcontent', 'local_wsmanager');
 
         // Info about changes.
-        $mform->addElement('static', 'changes_info', '',
+        $mform->addElement(
+            'static',
+            'changes_info',
+            '',
             '<div class="alert alert-info">' .
             get_string('changes_will_apply', 'local_wsmanager') .
             '</div>'

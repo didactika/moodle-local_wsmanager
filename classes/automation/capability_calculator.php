@@ -26,7 +26,6 @@ namespace local_wsmanager\automation;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class capability_calculator {
-
     /**
      * Get all capabilities required by a list of functions
      *
@@ -120,7 +119,7 @@ class capability_calculator {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($capabilities, SQL_PARAMS_NAMED);
+        [$insql, $params] = $DB->get_in_or_equal($capabilities, SQL_PARAMS_NAMED);
         $records = $DB->get_records_select('capabilities', "name $insql", $params);
 
         return array_column($records, 'name');

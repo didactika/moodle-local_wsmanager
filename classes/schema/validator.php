@@ -28,7 +28,6 @@ use local_wsmanager\automation\capability_calculator;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class validator {
-
     /** @var yaml_parser */
     protected $parser;
 
@@ -90,7 +89,7 @@ class validator {
         $seenfunctions = [];
         foreach ($functions as $func) {
             $funcname = $func['name'];
-            
+
             // Check for duplicates.
             if (isset($seenfunctions[$funcname])) {
                 $errors[] = get_string('error_duplicate_function', 'local_wsmanager', $funcname);
@@ -168,6 +167,17 @@ class validator {
             }
 
             $result = $this->validate($data, $excludeschemaid);
+
+            // Safety net against silent parse loss: if the raw text declares
+            // "extra_capabilities:" as a block (nothing after the colon) but parsing
+            // yielded none, the items were likely mis-indented and dropped.
+            if (
+                preg_match('/^\s*extra_capabilities\s*:\s*(#.*)?$/m', $content)
+                    && empty($this->parser->extract_extra_capabilities($data))
+            ) {
+                $result['warnings'][] = get_string('warning_extra_capabilities_empty', 'local_wsmanager');
+            }
+
             $result['data'] = $data;
             return $result;
         } catch (\moodle_exception $e) {

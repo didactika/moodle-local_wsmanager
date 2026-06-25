@@ -34,7 +34,6 @@ use local_wsmanager\notification\manager as notification_manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class health_check extends \core\task\scheduled_task {
-
     /**
      * Get task name
      *
@@ -130,7 +129,7 @@ class health_check extends \core\task\scheduled_task {
         $details['functions'] = $functioncheck;
         if ($functioncheck['critical_missing'] > 0) {
             $status = 'critical';
-        } elseif ($functioncheck['noncritical_missing'] > 0 && $status === 'healthy') {
+        } else if ($functioncheck['noncritical_missing'] > 0 && $status === 'healthy') {
             $status = 'warning';
         }
 
@@ -140,7 +139,7 @@ class health_check extends \core\task\scheduled_task {
             $details['user'] = $usercheck;
             if (!$usercheck['valid']) {
                 $status = 'critical';
-            } elseif ($usercheck['suspended'] && $status !== 'critical') {
+            } else if ($usercheck['suspended'] && $status !== 'critical') {
                 $status = 'warning';
             }
         } else {
@@ -154,7 +153,7 @@ class health_check extends \core\task\scheduled_task {
             $details['service'] = $servicecheck;
             if (!$servicecheck['exists']) {
                 $status = 'critical';
-            } elseif (!$servicecheck['enabled'] && $status !== 'critical') {
+            } else if (!$servicecheck['enabled'] && $status !== 'critical') {
                 $status = 'warning';
             }
         } else {
@@ -168,7 +167,7 @@ class health_check extends \core\task\scheduled_task {
             $details['token'] = $tokencheck;
             if (!$tokencheck['exists']) {
                 $status = 'critical';
-            } elseif (!$tokencheck['valid'] && $status !== 'critical') {
+            } else if (!$tokencheck['valid'] && $status !== 'critical') {
                 $status = 'warning';
             }
         } else {
@@ -194,8 +193,8 @@ class health_check extends \core\task\scheduled_task {
      * @return array
      */
     protected function check_functions_exist(array $functions, capability_calculator $capcalc): array {
-        $criticalMissing = 0;
-        $noncriticalMissing = 0;
+        $criticalmissing = 0;
+        $noncriticalmissing = 0;
         $missing = [];
 
         foreach ($functions as $func) {
@@ -205,17 +204,17 @@ class health_check extends \core\task\scheduled_task {
             if (!$capcalc->function_exists($functionname)) {
                 $missing[] = $functionname;
                 if ($critical) {
-                    $criticalMissing++;
+                    $criticalmissing++;
                 } else {
-                    $noncriticalMissing++;
+                    $noncriticalmissing++;
                 }
             }
         }
 
         return [
             'total' => count($functions),
-            'critical_missing' => $criticalMissing,
-            'noncritical_missing' => $noncriticalMissing,
+            'critical_missing' => $criticalmissing,
+            'noncritical_missing' => $noncriticalmissing,
             'missing' => $missing,
         ];
     }
@@ -300,19 +299,19 @@ class health_check extends \core\task\scheduled_task {
 
         if (isset($details['user']) && !$details['user']['valid']) {
             $messages[] = 'User issue: ' . ($details['user']['error'] ?? 'unknown');
-        } elseif (isset($details['user']['suspended']) && $details['user']['suspended']) {
+        } else if (isset($details['user']['suspended']) && $details['user']['suspended']) {
             $messages[] = 'User is suspended';
         }
 
         if (isset($details['service']) && !$details['service']['exists']) {
             $messages[] = 'Service issue: ' . ($details['service']['error'] ?? 'unknown');
-        } elseif (isset($details['service']['enabled']) && !$details['service']['enabled']) {
+        } else if (isset($details['service']['enabled']) && !$details['service']['enabled']) {
             $messages[] = 'Service is disabled';
         }
 
         if (isset($details['token']) && !$details['token']['exists'] && isset($details['token']['error'])) {
             $messages[] = 'Token issue: ' . $details['token']['error'];
-        } elseif (isset($details['token']['valid']) && !$details['token']['valid']) {
+        } else if (isset($details['token']['valid']) && !$details['token']['valid']) {
             $messages[] = 'Token expired';
         }
 
@@ -343,7 +342,8 @@ class health_check extends \core\task\scheduled_task {
 
         // Clean old logs (keep last 30 days).
         $cutoff = time() - (30 * 24 * 60 * 60);
-        $DB->delete_records_select('local_wsmanager_healthlog',
+        $DB->delete_records_select(
+            'local_wsmanager_healthlog',
             'schemaid = :schemaid AND timecreated < :cutoff',
             ['schemaid' => $schemaid, 'cutoff' => $cutoff]
         );

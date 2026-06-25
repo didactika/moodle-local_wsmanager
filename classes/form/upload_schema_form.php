@@ -30,7 +30,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class upload_schema_form extends \moodleform {
-
     /**
      * Form definition
      */
@@ -41,7 +40,7 @@ class upload_schema_form extends \moodleform {
         $docurl = new \moodle_url('/local/wsmanager/pages/documentation.php');
         $doclink = \html_writer::link(
             $docurl,
-            \html_writer::tag('i', '', ['class' => 'fa fa-book mr-2']) . 
+            \html_writer::tag('i', '', ['class' => 'fa fa-book mr-2']) .
             get_string('view_documentation', 'local_wsmanager'),
             ['class' => 'text-primary font-weight-bold']
         );

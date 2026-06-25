@@ -16,12 +16,12 @@
 
 /**
  * Compare versions page for schemas.
- * 
+ *
  * @package    local_wsmanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-**/
+ **/
 
 require_once(__DIR__ . '/../../../config.php');
 
@@ -63,7 +63,10 @@ $PAGE->set_pagelayout('admin');
 // Navigation.
 $PAGE->navbar->add(get_string('pluginname', 'local_wsmanager'), new moodle_url('/local/wsmanager/pages/dashboard.php'));
 $PAGE->navbar->add($schema->name, new moodle_url('/local/wsmanager/pages/view.php', ['id' => $id]));
-$PAGE->navbar->add(get_string('version_history', 'local_wsmanager'), new moodle_url('/local/wsmanager/pages/history.php', ['id' => $id]));
+$PAGE->navbar->add(
+    get_string('version_history', 'local_wsmanager'),
+    new moodle_url('/local/wsmanager/pages/history.php', ['id' => $id])
+);
 $PAGE->navbar->add(get_string('compare_versions', 'local_wsmanager'));
 
 echo $OUTPUT->header();
@@ -86,16 +89,16 @@ $max = max(count($comparison['lines1']), count($comparison['lines2']));
 for ($i = 0; $i < $max; $i++) {
     $l1 = $comparison['lines1'][$i] ?? null;
     $l2 = $comparison['lines2'][$i] ?? null;
-    
+
     $class1 = '';
     $class2 = '';
-    
+
     if ($l1 !== $l2) {
         if ($l1 !== null && $l2 === null) {
             // Deleted in v2 (present in v1).
             $class1 = 'bg-danger text-white';
             $class2 = 'bg-light'; // Empty placeholder.
-        } elseif ($l1 === null && $l2 !== null) {
+        } else if ($l1 === null && $l2 !== null) {
             // Added in v2.
             $class1 = 'bg-light'; // Empty placeholder.
             $class2 = 'bg-success text-white';
@@ -110,7 +113,7 @@ for ($i = 0; $i < $max; $i++) {
         'content1' => $l1 !== null ? $l1 : '',
         'class1' => $class1,
         'content2' => $l2 !== null ? $l2 : '',
-        'class2' => $class2
+        'class2' => $class2,
     ];
 }
 
@@ -120,14 +123,14 @@ $context = [
     'v1' => [
         'version' => $ver1->version,
         'date' => userdate($ver1->timecreated),
-        'user' => fullname(\core_user::get_user($ver1->changedby))
+        'user' => fullname(\core_user::get_user($ver1->changedby)),
     ],
     'v2' => [
         'version' => $ver2->version,
         'date' => userdate($ver2->timecreated),
-        'user' => fullname(\core_user::get_user($ver2->changedby))
+        'user' => fullname(\core_user::get_user($ver2->changedby)),
     ],
-    'lines' => $lines
+    'lines' => $lines,
 ];
 
 echo $OUTPUT->render_from_template('local_wsmanager/compare_page', $context);

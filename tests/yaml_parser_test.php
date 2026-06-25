@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for YAML parser class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\schema\yaml_parser
  */
 final class yaml_parser_test extends \advanced_testcase {
-
     /**
      * Test parsing valid YAML content.
      */

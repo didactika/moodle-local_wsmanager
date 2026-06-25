@@ -16,8 +16,6 @@
 
 namespace local_wsmanager\schema;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * History manager for schema versioning and rollback.
  *
@@ -27,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class history_manager {
-
     /** @var string Table name for history */
     const TABLE = 'local_wsmanager_history';
 
@@ -77,7 +74,8 @@ class history_manager {
     public function get_history(int $schemaid, int $limit = 50): array {
         global $DB;
 
-        $sql = "SELECT h.*, u.firstname, u.lastname, u.middlename, u.alternatename, u.firstnamephonetic, u.lastnamephonetic, u.picture, u.email, u.imagealt
+        $sql = "SELECT h.*, u.firstname, u.lastname, u.middlename, u.alternatename,
+                       u.firstnamephonetic, u.lastnamephonetic, u.picture, u.email, u.imagealt
                 FROM {" . self::TABLE . "} h
                 JOIN {user} u ON u.id = h.changedby
                 WHERE h.schemaid = :schemaid
@@ -181,10 +179,10 @@ class history_manager {
             if ($l1 === $l2) {
                 // Unchanged.
                 $diff[] = ['type' => 'unchanged', 'content' => $l1];
-            } elseif ($l1 !== null && $l2 === null) {
+            } else if ($l1 !== null && $l2 === null) {
                 // Deleted.
                 $diff[] = ['type' => 'deleted', 'content' => $l1];
-            } elseif ($l1 === null && $l2 !== null) {
+            } else if ($l1 === null && $l2 !== null) {
                 // Added.
                 $diff[] = ['type' => 'added', 'content' => $l2];
             } else {
@@ -256,7 +254,8 @@ class history_manager {
         $where = implode(' AND ', $conditions);
 
         // Get the most recent record for each version by using a subquery to get max id per version.
-        $sql = "SELECT h.*, u.firstname, u.lastname, u.middlename, u.alternatename, u.firstnamephonetic, u.lastnamephonetic, u.picture, u.email, u.imagealt
+        $sql = "SELECT h.*, u.firstname, u.lastname, u.middlename, u.alternatename,
+                       u.firstnamephonetic, u.lastnamephonetic, u.picture, u.email, u.imagealt
                 FROM {" . self::TABLE . "} h
                 JOIN {user} u ON u.id = h.changedby
                 WHERE " . $where . "
@@ -267,7 +266,7 @@ class history_manager {
                     GROUP BY h2.version
                 )
                 ORDER BY h.timecreated DESC";
-        
+
         $params['schemaid2'] = $schemaid;
 
         return $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);

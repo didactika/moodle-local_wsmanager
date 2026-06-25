@@ -57,7 +57,12 @@ if ($confirm && confirm_sesskey()) {
     $schemaname = $schema->name;
     $manager->delete_schema($id);
 
-    redirect($dashboardurl, get_string('schema_deleted_success', 'local_wsmanager', $schemaname), null, \core\output\notification::NOTIFY_SUCCESS);
+    redirect(
+        $dashboardurl,
+        get_string('schema_deleted_success', 'local_wsmanager', $schemaname),
+        null,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 // Show confirmation.

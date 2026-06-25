@@ -48,7 +48,7 @@ $backurl = !empty($returnurl) ? $returnurl : new moodle_url('/local/wsmanager/pa
 $downloadurl = new moodle_url('/local/wsmanager/pages/download_example.php');
 
 // Define parameters for template.
-$structureCode = <<<'YAML'
+$structurecode = <<<'YAML'
 meta:
   id: "example.service"           # Required: Unique identifier
   name: "Example Service"         # Required: Display name
@@ -75,7 +75,7 @@ definition:
     - admin@example.com
 YAML;
 
-$funcCode = <<<'YAML'
+$funccode = <<<'YAML'
 # Simple format (critical: true by default)
 functions:
   - core_user_get_users
@@ -92,8 +92,8 @@ YAML;
 $context = [
     'backurl' => $backurl->out(false),
     'downloadurl' => $downloadurl->out(false),
-    'structure_code' => $structureCode,
-    'function_code' => $funcCode
+    'structure_code' => $structurecode,
+    'function_code' => $funccode,
 ];
 
 echo $OUTPUT->render_from_template('local_wsmanager/documentation_page', $context);

@@ -16,8 +16,6 @@
 
 namespace local_wsmanager\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Task to clean up old schema versions.
  *
@@ -28,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class version_cleanup_task extends \core\task\scheduled_task {
-
     /**
      * Get the name of the task.
      *
@@ -66,7 +63,12 @@ class version_cleanup_task extends \core\task\scheduled_task {
 
             // Get all history records for this schema, ordered by timecreated DESC.
             // We want to KEEP the top N records.
-            $history = $DB->get_records('local_wsmanager_history', ['schemaid' => $schema->id], 'timecreated DESC', 'id, timecreated');
+            $history = $DB->get_records(
+                'local_wsmanager_history',
+                ['schemaid' => $schema->id],
+                'timecreated DESC',
+                'id, timecreated'
+            );
 
             $count = count($history);
             if ($count <= $maxversions) {
@@ -82,7 +84,7 @@ class version_cleanup_task extends \core\task\scheduled_task {
 
             $ids = array_keys($todelete);
             $DB->delete_records_list('local_wsmanager_history', 'id', $ids);
-            
+
             mtrace("  - Deleted IDs: " . implode(', ', $ids));
         }
 

@@ -199,7 +199,6 @@ function import_single_schema($manager, $validator, $yamlcontent, $conflictactio
         $createresult = $manager->create_schema($yamlcontent);
         $result['imported']++;
         $result['warnings'] = array_merge($result['warnings'], $createresult['warnings']);
-
     } catch (Exception $e) {
         $result['errors'][] = ($schemaid ?? '?') . ': ' . $e->getMessage();
     }
@@ -230,7 +229,7 @@ $formhtml = ob_get_clean();
 $context = [
     'backurl' => (new moodle_url('/local/wsmanager/pages/dashboard.php'))->out(false),
     'docurl' => (new moodle_url('/local/wsmanager/pages/documentation.php'))->out(false),
-    'formhtml' => $formhtml
+    'formhtml' => $formhtml,
 ];
 
 echo $OUTPUT->render_from_template('local_wsmanager/import_page', $context);

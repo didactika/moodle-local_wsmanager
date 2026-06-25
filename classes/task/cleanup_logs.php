@@ -26,7 +26,6 @@ namespace local_wsmanager\task;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cleanup_logs extends \core\task\scheduled_task {
-
     /**
      * Get task name
      *

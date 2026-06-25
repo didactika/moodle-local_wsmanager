@@ -29,7 +29,6 @@ require_once("$CFG->dirroot/local/wsmanager/classes/schema/manager.php");
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_wsmanager_external extends external_api {
-
     /**
      * Returns description of method parameters
      * @return external_function_parameters
@@ -44,7 +43,6 @@ class local_wsmanager_external extends external_api {
      */
     public static function get_schemas() {
         global $DB;
-
 
         $context = context_system::instance();
         self::validate_context($context);
@@ -107,7 +105,6 @@ class local_wsmanager_external extends external_api {
         global $DB;
 
         $params = self::validate_parameters(self::get_schema_parameters(), ['id' => $id]);
-        
 
         $context = context_system::instance();
         self::validate_context($context);
@@ -168,20 +165,19 @@ class local_wsmanager_external extends external_api {
     public static function create_schema($yamlcontent, $generatetoken = false) {
         $params = self::validate_parameters(self::create_schema_parameters(), [
             'yamlcontent' => $yamlcontent,
-            'generatetoken' => $generatetoken
+            'generatetoken' => $generatetoken,
         ]);
-
 
         $context = context_system::instance();
         self::validate_context($context);
         require_capability('local/wsmanager:manage', $context);
 
         $manager = new \local_wsmanager\schema\manager();
-        
+
         try {
             $parsed = $manager->validate_yaml($params['yamlcontent']);
             $result = $manager->create_schema($parsed, $params['yamlcontent']);
-            
+
             $token = '';
             if ($params['generatetoken']) {
                 $token = $manager->generate_token($result->id);
@@ -191,9 +187,8 @@ class local_wsmanager_external extends external_api {
                 'id' => $result->id,
                 'status' => 'success',
                 'message' => 'Schema created successfully',
-                'token' => $token
+                'token' => $token,
             ];
-
         } catch (Exception $e) {
             throw new moodle_exception('error', 'core', '', $e->getMessage());
         }
@@ -234,24 +229,22 @@ class local_wsmanager_external extends external_api {
     public static function update_schema($id, $yamlcontent) {
         $params = self::validate_parameters(self::update_schema_parameters(), [
             'id' => $id,
-            'yamlcontent' => $yamlcontent
+            'yamlcontent' => $yamlcontent,
         ]);
-
 
         $context = context_system::instance();
         self::validate_context($context);
         require_capability('local/wsmanager:manage', $context);
 
         $manager = new \local_wsmanager\schema\manager();
-        
+
         try {
             $manager->update_schema($params['id'], $params['yamlcontent']);
-            
+
             return [
                 'status' => 'success',
-                'message' => 'Schema updated successfully'
+                'message' => 'Schema updated successfully',
             ];
-
         } catch (Exception $e) {
             throw new moodle_exception('error', 'core', '', $e->getMessage());
         }
@@ -269,7 +262,7 @@ class local_wsmanager_external extends external_api {
             ]
         );
     }
-    
+
     /**
      * Returns description of method parameters
      * @return external_function_parameters
@@ -288,21 +281,19 @@ class local_wsmanager_external extends external_api {
     public static function delete_schema($id) {
         $params = self::validate_parameters(self::delete_schema_parameters(), ['id' => $id]);
 
-
         $context = context_system::instance();
         self::validate_context($context);
         require_capability('local/wsmanager:manage', $context);
 
         $manager = new \local_wsmanager\schema\manager();
-        
+
         try {
             $manager->delete_schema($params['id']);
-            
+
             return [
                 'status' => 'success',
-                'message' => 'Schema deleted successfully'
+                'message' => 'Schema deleted successfully',
             ];
-
         } catch (Exception $e) {
             throw new moodle_exception('error', 'core', '', $e->getMessage());
         }

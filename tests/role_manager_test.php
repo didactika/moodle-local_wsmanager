@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for role manager class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\automation\role_manager
  */
 final class role_manager_test extends \advanced_testcase {
-
     /**
      * Test creating a service role.
      */
@@ -112,7 +109,7 @@ final class role_manager_test extends \advanced_testcase {
             $this->assertEquals(CAP_ALLOW, $assigned->permission);
         }
 
-        // get_role_capabilities should reflect the same set.
+        // The get_role_capabilities call should reflect the same set.
         $this->assertEqualsCanonicalizing($capabilities, $manager->get_role_capabilities($roleid));
     }
 

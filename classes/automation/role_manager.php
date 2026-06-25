@@ -26,7 +26,6 @@ namespace local_wsmanager\automation;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class role_manager {
-
     /**
      * Create a service role at system level
      *

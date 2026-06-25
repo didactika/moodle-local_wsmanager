@@ -24,13 +24,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Data generator class for local_wsmanager.
  */
 class local_wsmanager_generator extends testing_module_generator {
-
     /** @var int Counter for unique schema IDs */
     protected $schemacount = 0;
 

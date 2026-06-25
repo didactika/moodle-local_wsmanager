@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for capability calculator class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\automation\capability_calculator
  */
 final class capability_calculator_test extends \advanced_testcase {
-
     /**
      * Insert a fake external function fixture for testing.
      *
@@ -124,7 +121,7 @@ final class capability_calculator_test extends \advanced_testcase {
             'local_wsmanager_fake_function_b',
         ]);
 
-        // moodle/fake:shared must appear only once despite being on both functions.
+        // The capability moodle/fake:shared must appear only once despite being on both functions.
         $this->assertEquals(3, count($caps));
         $this->assertContains('moodle/fake:shared', $caps);
         $this->assertContains('moodle/fake:onlya', $caps);

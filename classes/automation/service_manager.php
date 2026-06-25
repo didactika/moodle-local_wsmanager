@@ -26,7 +26,6 @@ namespace local_wsmanager\automation;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class service_manager {
-
     /**
      * Create an external service (restricted to authorized users only)
      *
@@ -131,10 +130,12 @@ class service_manager {
         require_once($CFG->dirroot . '/webservice/lib.php');
 
         // Check if already authorized.
-        if ($DB->record_exists('external_services_users', [
+        if (
+            $DB->record_exists('external_services_users', [
             'externalserviceid' => $serviceid,
             'userid' => $userid,
-        ])) {
+            ])
+        ) {
             return;
         }
 

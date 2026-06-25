@@ -95,7 +95,7 @@ $statusicon = 'fa-check-circle';
 if ($schema->status === 'warning') {
     $statusclass = 'badge-warning';
     $statusicon = 'fa-exclamation-triangle';
-} elseif ($schema->status === 'critical') {
+} else if ($schema->status === 'critical') {
     $statusclass = 'badge-danger';
     $statusicon = 'fa-times-circle';
 }
@@ -107,8 +107,11 @@ $resourcerole = null;
 $resourceservice = null;
 
 if ($schema->userid) {
-    $u = $DB->get_record('user', ['id' => $schema->userid],
-        'id, username, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename');
+    $u = $DB->get_record(
+        'user',
+        ['id' => $schema->userid],
+        'id, username, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename'
+    );
     if ($u) {
         $resourceuser = [
             'name'     => fullname($u),
@@ -159,7 +162,8 @@ foreach ($requiredplugins as $pluginname) {
 }
 
 // Get health logs.
-$healthlogs = $DB->get_records('local_wsmanager_healthlog',
+$healthlogs = $DB->get_records(
+    'local_wsmanager_healthlog',
     ['schemaid' => $id],
     'timecreated DESC',
     '*',
@@ -172,7 +176,7 @@ foreach ($healthlogs as $log) {
     $logstatusclass = 'badge-success';
     if ($log->status === 'warning') {
         $logstatusclass = 'badge-warning';
-    } elseif ($log->status === 'critical') {
+    } else if ($log->status === 'critical') {
         $logstatusclass = 'badge-danger';
     }
 

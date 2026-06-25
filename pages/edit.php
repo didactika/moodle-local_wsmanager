@@ -64,7 +64,7 @@ $form->set_data([
 
 if ($form->is_cancelled()) {
     redirect($viewurl);
-} elseif ($data = $form->get_data()) {
+} else if ($data = $form->get_data()) {
     try {
         $result = $manager->update_schema($data->id, $data->yaml_content);
 
@@ -80,7 +80,6 @@ if ($form->is_cancelled()) {
 
         \core\notification::success(get_string('schema_updated_success', 'local_wsmanager', $schema->name));
         redirect($viewurl);
-
     } catch (\Exception $e) {
         \core\notification::error($e->getMessage());
     }

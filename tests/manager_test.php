@@ -16,8 +16,6 @@
 
 namespace local_wsmanager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for schema manager class.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @covers     \local_wsmanager\schema\manager
  */
 final class manager_test extends \advanced_testcase {
-
     /**
      * Get a valid YAML content for testing.
      *
@@ -130,7 +127,7 @@ meta:
 definition:
   functions:
     - core_webservice_get_site_info
-    - core_user_get_users 
+    - core_user_get_users
 YAML;
 
         $manager->update_schema($result['id'], $updateyaml);

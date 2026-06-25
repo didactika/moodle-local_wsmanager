@@ -56,9 +56,7 @@ if ($hassiteconfig) {
     );
 
     if ($ADMIN->fulltree) {
-        // =====================================
-        // TAB: Notifications
-        // =====================================
+        // TAB: Notifications.
         $settings->add(new admin_setting_heading(
             'local_wsmanager/notifications_heading',
             get_string('settings_notifications', 'local_wsmanager'),
@@ -95,9 +93,7 @@ if ($hassiteconfig) {
             ]
         ));
 
-        // =====================================
-        // TAB: Health Check
-        // =====================================
+        // TAB: Health Check.
         $settings->add(new admin_setting_heading(
             'local_wsmanager/healthcheck_heading',
             get_string('settings_healthcheck', 'local_wsmanager'),
@@ -112,9 +108,7 @@ if ($hassiteconfig) {
             1
         ));
 
-        // =====================================
-        // TAB: Log Cleanup
-        // =====================================
+        // TAB: Log Cleanup.
         $settings->add(new admin_setting_heading(
             'local_wsmanager/cleanup_heading',
             get_string('settings_cleanup', 'local_wsmanager'),
@@ -138,9 +132,7 @@ if ($hassiteconfig) {
             PARAM_INT
         ));
 
-        // =====================================
-        // TAB: Version Retention
-        // =====================================
+        // TAB: Version Retention.
         $settings->add(new admin_setting_heading(
             'local_wsmanager/version_retention_heading',
             get_string('settings_version_retention', 'local_wsmanager'),

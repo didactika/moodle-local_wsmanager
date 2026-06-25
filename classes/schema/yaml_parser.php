@@ -29,7 +29,6 @@ namespace local_wsmanager\schema;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class yaml_parser {
-
     /**
      * Parse YAML content string
      *
@@ -68,64 +67,110 @@ class yaml_parser {
         $lines = explode("\n", $content);
         $result = [];
         $stack = [&$result];
-        $indentStack = [-1];
+        // Metadata for every open container on $stack, kept in parallel.
+        // type:        'map' | 'seq' | null   (null = not yet known)
+        // childindent: indent at which this container's direct children sit (null until first child)
+        // keyindent:   indent of the key that opened this container (-1 for the root).
+        $frames = [['type' => 'map', 'childindent' => 0, 'keyindent' => -1]];
 
-        foreach ($lines as $linenum => $line) {
-            // Skip empty lines and comments.
+        foreach ($lines as $line) {
+            // Skip empty lines and whole-line comments.
             $trimmed = trim($line);
             if ($trimmed === '' || strpos($trimmed, '#') === 0) {
                 continue;
             }
 
-            // Calculate indent.
-            $indent = strlen($line) - strlen(ltrim($line));
-
-            // Pop stack for dedents.
-            while (count($indentStack) > 1 && $indent <= end($indentStack)) {
-                array_pop($stack);
-                array_pop($indentStack);
-            }
-
-            // Handle array item.
-            if (preg_match('/^(\s*)-\s*(.*)$/', $line, $matches)) {
-                $value = trim($matches[2]);
-                $current = &$stack[count($stack) - 1];
-
-                if (!is_array($current)) {
-                    $current = [];
-                }
-
-                // Check if it's an object in array (- name: value).
-                if (preg_match('/^(\w+):\s*(.*)$/', $value, $kvmatch)) {
-                    $obj = [$kvmatch[1] => $this->parse_value($kvmatch[2])];
-                    $current[] = $obj;
-                    $stack[] = &$current[count($current) - 1];
-                    $indentStack[] = $indent;
-                } else {
-                    $current[] = $this->parse_value($value);
-                }
+            // Classify the line. A sequence item starts with "-"; a mapping key is
+            // "<key>:" where the colon is followed by whitespace or end-of-line (so
+            // values such as "moodle/role:assign" are NOT mistaken for keys).
+            $isseq = preg_match('/^\s*-(\s|$)/', $line) === 1;
+            $iskey = !$isseq && preg_match('/^\s*[^\s:#][^:]*:(\s|$)/', $line) === 1;
+            if (!$isseq && !$iskey) {
+                // Unsupported construct (block scalar, etc.); ignore.
                 continue;
             }
 
-            // Handle key: value.
-            if (preg_match('/^(\s*)(\w+):\s*(.*)$/', $line, $matches)) {
-                $key = $matches[2];
-                $value = trim($matches[3]);
-                $current = &$stack[count($stack) - 1];
+            $indent = strlen($line) - strlen(ltrim($line));
 
-                if (!is_array($current)) {
-                    $current = [];
-                }
-
-                if ($value === '' || $value === '[]' || str_starts_with($value, '#')) {
-                    // Empty value (or a pure inline comment) means nested object or array.
-                    $current[$key] = ($value === '[]') ? [] : [];
-                    $stack[] = &$current[$key];
-                    $indentStack[] = $indent;
+            // Close any containers this line does not belong to. The rule mirrors
+            // block YAML: a sequence may share its key's indent, a mapping key must
+            // be deeper than its key, and the token type must match the container.
+            while (count($frames) > 1) {
+                $top = $frames[count($frames) - 1];
+                if ($top['childindent'] === null) {
+                    // Container opened but no child seen yet.
+                    if ($isseq && $indent >= $top['keyindent']) {
+                        break;
+                    }
+                    if ($iskey && $indent > $top['keyindent']) {
+                        break;
+                    }
                 } else {
-                    $current[$key] = $this->parse_value($value);
+                    if ($indent > $top['childindent']) {
+                        break;
+                    }
+                    if ($indent === $top['childindent']) {
+                        if ($isseq && $top['type'] === 'seq') {
+                            break;
+                        }
+                        if ($iskey && $top['type'] === 'map') {
+                            break;
+                        }
+                    }
                 }
+                array_pop($stack);
+                array_pop($frames);
             }
+
+            $topidx = count($stack) - 1;
+            $current = &$stack[$topidx];
+            if (!is_array($current)) {
+                $current = [];
+            }
+
+            // Resolve the container's type the first time a child is added to it.
+            if ($frames[$topidx]['childindent'] === null) {
+                $frames[$topidx]['childindent'] = $indent;
+                $frames[$topidx]['type'] = $isseq ? 'seq' : 'map';
+            }
+
+            if ($isseq) {
+                preg_match('/^(\s*-\s*)(.*)$/', $line, $sm);
+                $value = rtrim($sm[2]);
+
+                // Object in array (- key: value): open a map frame for further keys.
+                if (preg_match('/^([^\s:#][^:]*):(?:\s+(.*))?$/', $value, $om)) {
+                    $okey = rtrim($om[1]);
+                    $oval = isset($om[2]) ? trim($om[2]) : '';
+                    $innerindent = strlen($sm[1]);
+
+                    $current[] = [$okey => $this->parse_value($oval)];
+                    $last = array_key_last($current);
+                    $stack[] = &$current[$last];
+                    $frames[] = ['type' => 'map', 'childindent' => $innerindent, 'keyindent' => $innerindent];
+                } else {
+                    $current[] = $this->parse_value($value);
+                }
+                unset($current);
+                continue;
+            }
+
+            // Mapping key.
+            preg_match('/^\s*([^\s:#][^:]*):(?:\s+(.*))?$/', $line, $km);
+            $key = rtrim($km[1]);
+            $value = isset($km[2]) ? trim($km[2]) : '';
+
+            if ($value === '[]') {
+                $current[$key] = [];
+            } else if ($value === '' || str_starts_with($value, '#')) {
+                // Empty value (or a pure inline comment) means a nested map or sequence follows.
+                $current[$key] = [];
+                $stack[] = &$current[$key];
+                $frames[] = ['type' => null, 'childindent' => null, 'keyindent' => $indent];
+            } else {
+                $current[$key] = $this->parse_value($value);
+            }
+            unset($current);
         }
 
         return $result;
@@ -229,9 +274,9 @@ class yaml_parser {
         // Check required meta fields.
         if (empty($meta['id'])) {
             $errors[] = get_string('error_missing_meta_id', 'local_wsmanager');
-        } elseif (!$this->validate_schema_id($meta['id'])) {
+        } else if (!$this->validate_schema_id($meta['id'])) {
             $errors[] = get_string('error_invalid_schema_id', 'local_wsmanager', $meta['id']);
-        } elseif (\strlen($meta['id']) > 50) {
+        } else if (\strlen($meta['id']) > 50) {
             $errors[] = get_string('error_schema_id_too_long', 'local_wsmanager', \strlen($meta['id']));
         }
 
@@ -302,7 +347,7 @@ class yaml_parser {
                     'name' => $func,
                     'critical' => true,
                 ];
-            } elseif (is_array($func) && isset($func['name'])) {
+            } else if (is_array($func) && isset($func['name'])) {
                 $result[] = [
                     'name' => $func['name'],
                     'critical' => $func['critical'] ?? true,

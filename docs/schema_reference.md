@@ -90,6 +90,21 @@ functions:
 
 When a schema is created or updated, the plugin automatically calculates the full set of required capabilities by reading the PHP declarations of each web service function in Moodle's codebase. These derived capabilities are merged with any `extra_capabilities` listed in the YAML. The final set is assigned to the schema's dedicated role. `webservice/rest:use` and `webservice/soap:use` are always included regardless of the functions defined.
 
+### Special case: `moodle/role:*` capabilities
+
+A handful of capabilities are **not enough on their own** — granting them to the service role does not, by itself, let the service perform the action. Moodle gates them behind a second layer, the *role-allow matrices*, which say *which target roles* a role may act on:
+
+| Capability | Also requires (matrix) | Configured in *Define roles* → tab |
+|------------|------------------------|------------------------------------|
+| `moodle/role:assign` | `role_allow_assign` | Allow role assignments |
+| `moodle/role:review` | `role_allow_view` | Allow role to view |
+| `moodle/role:override` | `role_allow_override` | Allow role overrides |
+| `moodle/role:switch` | `role_allow_switch` | Allow role switches |
+
+The service role this plugin creates has **no archetype**, so it starts with no entries in any of these matrices. For example, even with `moodle/role:assign` granted, a call to `core_role_assign_roles` runs `get_assignable_roles()` and throws `Can not assign roleid=X` until the matrix permits it.
+
+To make these work, after provisioning the schema go to **Site administration → Users → Permissions → Define roles**, open the relevant tab (e.g. *Allow role assignments*), and allow the service role (`ws_{id}`) to act on the specific target roles it needs. The plugin does not manage these matrices automatically.
+
 ## Naming Conventions
 
 When a schema is created, the following resources are automatically provisioned:

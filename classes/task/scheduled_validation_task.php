@@ -16,8 +16,6 @@
 
 namespace local_wsmanager\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Task to validate all schemas periodically.
  *
@@ -28,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class scheduled_validation_task extends \core\task\scheduled_task {
-
     /**
      * Get the name of the task.
      *
@@ -61,8 +58,8 @@ class scheduled_validation_task extends \core\task\scheduled_task {
                 foreach ($result['errors'] as $error) {
                     mtrace("    - $error");
                 }
-                // Here we could potentially send a notification to admins
-            } elseif (!empty($result['warnings'])) {
+                // Here we could potentially send a notification to admins.
+            } else if (!empty($result['warnings'])) {
                 mtrace("  [WARNING] Validation passed with warnings:");
                 foreach ($result['warnings'] as $warning) {
                     mtrace("    - $warning");

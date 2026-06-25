@@ -26,7 +26,6 @@ namespace local_wsmanager\notification;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manager {
-
     /**
      * Send daily report of health issues (and optionally healthy status)
      *
@@ -57,7 +56,7 @@ class manager {
         // Get Branding.
         try {
             $themename = $CFG->theme;
-            
+
             // Try to get logo URL manually since theme_config::get_logo_url might not exist.
             $logourl = $this->get_theme_logo_url($themename);
             if ($logourl) {
@@ -73,7 +72,7 @@ class manager {
             }
         } catch (\Exception $e) {
             // Fallback if branding fails.
-            $context['primary_color'] = '#0f6674'; 
+            $context['primary_color'] = '#0f6674';
         }
 
         // Determine overall status.
@@ -93,11 +92,11 @@ class manager {
             $schema = $issue['schema'];
             $result = $issue['result'];
             $msgs = explode('; ', $result['message']);
-            
+
             $issuesdata[] = [
                 'name' => $schema->name,
                 'schema_id' => $schema->schema_id,
-                'status' => $result['status'], // 'warning' or 'critical'
+                'status' => $result['status'], // Either warning or critical.
                 'status_label' => strtoupper($result['status']),
                 'messages' => $msgs,
                 'view_url' => (new \moodle_url('/local/wsmanager/pages/view.php', ['id' => $schema->id]))->out(false),
@@ -142,7 +141,7 @@ class manager {
      */
     public function send_critical_alert(\stdClass $schema, string $message): void {
         global $CFG;
-        
+
         $recipients = $this->get_notification_recipients();
         if (empty($recipients)) {
             return;
@@ -150,7 +149,8 @@ class manager {
 
         $subject = '[CRITICAL] Service Schema: ' . $schema->name;
         $body = "Critical issue detected with schema '{$schema->name}':\n\n{$message}";
-        $htmlbody = nl2br(s($body)) . '<br><br><a href="'.$CFG->wwwroot.'/local/wsmanager/pages/view.php?id='.$schema->id.'">View Schema</a>';
+        $htmlbody = nl2br(s($body)) . '<br><br><a href="' . $CFG->wwwroot
+            . '/local/wsmanager/pages/view.php?id=' . $schema->id . '">View Schema</a>';
 
         $noreplyuser = \core_user::get_noreply_user();
 
@@ -192,7 +192,7 @@ class manager {
                     if (in_array($email, $addedemails)) {
                         continue;
                     }
-                    
+
                     $user = $DB->get_record('user', ['email' => $email, 'deleted' => 0, 'suspended' => 0]);
                     if ($user) {
                         $recipients[$user->id] = $user;
@@ -206,7 +206,7 @@ class manager {
                         $dummyuser->lastname = 'Recipient';
                         $dummyuser->mailformat = 1;
                         $dummyuser->mnethostid = $CFG->mnet_localhost_id ?? 1;
-                        
+
                         // We use the email as key to avoid duplicates if mixed with real users.
                         $recipients['external_' . $email] = $dummyuser;
                         $addedemails[] = $email;
@@ -262,17 +262,17 @@ class manager {
      */
     protected function get_theme_logo_url(string $themename): ?string {
         global $CFG;
-        
+
         // Moodle stores logos in core_admin, not in the theme.
         $logo = get_config('core_admin', 'logo');
         if (empty($logo)) {
             return null;
         }
-        
+
         // Build URL matching core's approach.
         $syscontext = \context_system::instance();
         $filepath = '200x200/'; // Standard size.
-        
+
         $url = \moodle_url::make_pluginfile_url(
             $syscontext->id,
             'core_admin',
@@ -281,7 +281,7 @@ class manager {
             theme_get_revision(),
             $logo
         );
-        
+
         return $url->out(false);
     }
 }

@@ -32,7 +32,6 @@ use local_wsmanager\automation\capability_calculator;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manager {
-
     /** @var yaml_parser */
     protected $parser;
 
@@ -78,11 +77,14 @@ class manager {
     public function create_schema(string $yamlcontent, bool $generatetoken = false): array {
         global $DB;
 
-
         $validation = $this->validator->validate_content($yamlcontent);
         if (!empty($validation['errors'])) {
-            throw new \moodle_exception('error_invalid_yaml', 'local_wsmanager',
-                '', implode('; ', $validation['errors']));
+            throw new \moodle_exception(
+                'error_invalid_yaml',
+                'local_wsmanager',
+                '',
+                implode('; ', $validation['errors'])
+            );
         }
 
         $data = $validation['data'];
@@ -150,7 +152,7 @@ class manager {
 
             $id = $DB->insert_record('local_wsmanager_schemas', $record);
 
-            // create initial history entry.
+            // Create initial history entry.
             $historymanager = new history_manager();
             if (!$historymanager->version_exists($id, $meta['version'])) {
                 $historymanager->save_version(
@@ -166,7 +168,6 @@ class manager {
                 'token' => $tokenvalue,
                 'warnings' => $warnings,
             ];
-
         } catch (\Exception $e) {
             // Rollback any partially created resources.
             if ($serviceid) {
@@ -187,11 +188,11 @@ class manager {
      *
      * @param int $id Schema record ID
      * @param string $yamlcontent New YAML content
-     * @param bool $isRollback If true, skip version increment validation (used for rollback)
+     * @param bool $isrollback If true, skip version increment validation (used for rollback)
      * @return array ['warnings' => array]
      * @throws \moodle_exception If validation fails
      */
-    public function update_schema(int $id, string $yamlcontent, bool $isRollback = false): array {
+    public function update_schema(int $id, string $yamlcontent, bool $isrollback = false): array {
         global $DB;
 
         $existing = $this->get_schema($id);
@@ -199,17 +200,19 @@ class manager {
             throw new \moodle_exception('Schema not found');
         }
 
-
         $validation = $this->validator->validate_content($yamlcontent, $id);
         if (!empty($validation['errors'])) {
-            throw new \moodle_exception('error_invalid_yaml', 'local_wsmanager',
-                '', implode('; ', $validation['errors']));
+            throw new \moodle_exception(
+                'error_invalid_yaml',
+                'local_wsmanager',
+                '',
+                implode('; ', $validation['errors'])
+            );
         }
 
         $data = $validation['data'];
         $meta = $this->parser->extract_meta($data);
         $newhash = $this->parser->get_hash($yamlcontent);
-
 
         // ID must not change.
         if ($meta['id'] !== $existing->schema_id) {
@@ -217,39 +220,43 @@ class manager {
         }
 
         // Parse existing content to compare structural changes.
-        $old_data = $this->parser->parse($existing->yaml_content);
+        $olddata = $this->parser->parse($existing->yaml_content);
 
         // Prepare "effective content" (exclude meta) to check for functional changes.
-        $new_content_check = $data;
-        unset($new_content_check['meta']);
+        $newcontentcheck = $data;
+        unset($newcontentcheck['meta']);
 
-        $old_content_check = $old_data;
-        unset($old_content_check['meta']);
+        $oldcontentcheck = $olddata;
+        unset($oldcontentcheck['meta']);
 
         // Check if functional content has changed.
         // Using strict comparison might fail on key order, but our parser is consistent.
         // Serialize is safer for deep comparison.
-        $content_changed = (serialize($new_content_check) !== serialize($old_content_check));
+        $contentchanged = (serialize($newcontentcheck) !== serialize($oldcontentcheck));
 
-        if ($content_changed) {
+        if ($contentchanged) {
             // Functional content changed: Version MUST change (increment).
             if ($meta['version'] === $existing->version) {
                 throw new \moodle_exception('error_version_change_required', 'local_wsmanager');
             }
-            if (!$isRollback && version_compare($meta['version'], $existing->version, '<=')) {
-                throw new \moodle_exception('error_version_must_increment', 'local_wsmanager', '', 
-                    (object)['current' => $existing->version, 'new' => $meta['version']]);
+            if (!$isrollback && version_compare($meta['version'], $existing->version, '<=')) {
+                throw new \moodle_exception(
+                    'error_version_must_increment',
+                    'local_wsmanager',
+                    '',
+                    (object)['current' => $existing->version, 'new' => $meta['version']]
+                );
             }
         } else {
             // Content did NOT change (only metadata): Version MUST NOT change.
-            if ($meta['version'] !== $existing->version && !$isRollback) {
+            if ($meta['version'] !== $existing->version && !$isrollback) {
                 throw new \moodle_exception('error_version_change_forbidden', 'local_wsmanager');
             }
         }
 
         // Save history of the NEW version.
         // This ensures the history log reflects the timeline of installed versions.
-        if($newhash !== $existing->yaml_hash || $meta['version'] !== $existing->version) {
+        if ($newhash !== $existing->yaml_hash || $meta['version'] !== $existing->version) {
             $historymanager = new history_manager();
             if (!$historymanager->version_exists($id, $meta['version'])) {
                 $historymanager->save_version(
@@ -266,7 +273,7 @@ class manager {
         $additionalusers = $this->parser->extract_additional_users($data);
         $servicesettings = $this->parser->extract_service_settings($data);
 
-        // --- User: update name, or recreate if deleted ---
+        // User: update name, or recreate if deleted.
         $userid = $existing->userid;
         if (!$userid || !$this->usermanager->user_exists($userid)) {
             $userid = $this->usermanager->create_service_user($meta['id'], $meta['name']);
@@ -275,7 +282,7 @@ class manager {
             $this->usermanager->update_user_name($userid, $meta['name']);
         }
 
-        // --- Role: update, or recreate if deleted ---
+        // Role: update, or recreate if deleted.
         $roleid = $existing->roleid;
         if (!$roleid || !$this->rolemanager->role_exists($roleid)) {
             $roleid = $this->rolemanager->create_service_role($meta['id'], $meta['name'], $meta['description']);
@@ -290,7 +297,7 @@ class manager {
         $this->rolemanager->reset_capabilities($roleid);
         $this->rolemanager->assign_capabilities($roleid, $allcaps);
 
-        // --- Service: update, or recreate if deleted ---
+        // Service: update, or recreate if deleted.
         $serviceid = $existing->serviceid;
         if (!$serviceid || !$this->servicemanager->service_exists($serviceid)) {
             $serviceid = $this->servicemanager->create_external_service(
@@ -325,7 +332,6 @@ class manager {
         $warnings = $validation['warnings'];
         $additionalwarnings = $this->servicemanager->authorize_additional_users($serviceid, $additionalusers);
         $warnings = array_merge($warnings, $additionalwarnings);
-
 
         $record = new \stdClass();
         $record->id = $id;
@@ -372,7 +378,6 @@ class manager {
         if ($schema->userid) {
             $this->usermanager->delete_user($schema->userid);
         }
-
 
         $DB->delete_records('local_wsmanager_healthlog', ['schemaid' => $id]);
         $DB->delete_records('local_wsmanager_history', ['schemaid' => $id]);
@@ -480,12 +485,12 @@ class manager {
         global $DB;
 
         [$where, $params] = $this->build_filter_conditions($filters);
-        
+
         // Select all from schemas, but override 'enabled' with the service's actual state.
-        $sql = "SELECT s.*, es.enabled AS service_enabled 
+        $sql = "SELECT s.*, es.enabled AS service_enabled
                   FROM {local_wsmanager_schemas} s
              LEFT JOIN {external_services} es ON s.serviceid = es.id";
-        
+
         if ($where) {
             $sql .= " WHERE " . $where;
         }
@@ -497,7 +502,7 @@ class manager {
         foreach ($records as $record) {
             // If service exists, use its status. Otherwise fallback to schema status (shouldn't happen in healthy state).
             if (property_exists($record, 'service_enabled') && $record->service_enabled !== null) {
-                // If there's a mismatch, we might want to update our local record, 
+                // If there's a mismatch, we might want to update our local record,
                 // but for display purposes, the service status is the truth.
                 $record->enabled = $record->service_enabled;
             }

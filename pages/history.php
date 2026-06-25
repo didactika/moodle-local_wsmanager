@@ -111,7 +111,7 @@ if ($action === 'rollback' && $historyid && confirm_sesskey()) {
     } else {
         // Show confirmation page.
         echo $OUTPUT->header();
-        
+
         $confirmurl = new moodle_url('/local/wsmanager/pages/history.php', [
             'id' => $id,
             'action' => 'rollback',
@@ -120,13 +120,13 @@ if ($action === 'rollback' && $historyid && confirm_sesskey()) {
             'sesskey' => sesskey(),
         ]);
         $cancelurl = new moodle_url('/local/wsmanager/pages/history.php', ['id' => $id]);
-        
+
         echo $OUTPUT->confirm(
             get_string('rollback_confirm', 'local_wsmanager'),
             $confirmurl,
             $cancelurl
         );
-        
+
         echo $OUTPUT->footer();
         exit;
     }
@@ -147,7 +147,9 @@ $context = [
     'filterversion' => $filterversion,
     'datefromval' => $datefrom > 0 ? date('Y-m-d', $datefrom) : '',
     'datetoval' => $dateto > 0 ? date('Y-m-d', $dateto) : '',
-    'clearurl' => (new moodle_url($PAGE->url, ['id' => $id, 'page' => 0, 'perpage' => 10, 'version' => '', 'datefrom' => 0, 'dateto' => 0]))->out(false),
+    'clearurl' => (new moodle_url($PAGE->url, [
+        'id' => $id, 'page' => 0, 'perpage' => 10, 'version' => '', 'datefrom' => 0, 'dateto' => 0,
+    ]))->out(false),
     'compareaction' => (new moodle_url('/local/wsmanager/pages/compare.php'))->out(false),
     'totalcount' => $totalcount,
     'nohistory' => empty($history),
@@ -158,7 +160,7 @@ $context['perpageoptions'] = [];
 foreach ([10, 25, 50, 100] as $opt) {
     $context['perpageoptions'][] = [
         'value' => $opt,
-        'selected' => ($perpage == $opt)
+        'selected' => ($perpage == $opt),
     ];
 }
 
@@ -167,7 +169,7 @@ if (!$hasfilters && $page === 0) {
     $context['currentversion'] = [
         'version' => $schema->version,
         'timemodified' => userdate($schema->timemodified),
-        'editurl' => (new moodle_url('/local/wsmanager/pages/edit.php', ['id' => $id]))->out(false)
+        'editurl' => (new moodle_url('/local/wsmanager/pages/edit.php', ['id' => $id]))->out(false),
     ];
 }
 
@@ -186,10 +188,10 @@ if (!empty($history)) {
         $user->picture = $record->picture;
         $user->email = $record->email;
         $user->imagealt = $record->imagealt;
-        
+
         $userpic = $OUTPUT->user_picture($user, ['size' => 30, 'link' => false]);
         $username = fullname($user);
-        
+
         $row = [
             'id' => $record->id,
             'version' => $record->version,
@@ -211,7 +213,7 @@ if (!empty($history)) {
 
         $historyrows[] = $row;
     }
-    
+
     $context['history_rows'] = $historyrows;
 
     // Standard Moodle Pagination.

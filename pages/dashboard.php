@@ -83,7 +83,7 @@ foreach ($schemas as $schema) {
     if ($schema->status === 'warning') {
         $statusclass = 'badge-warning';
         $statusicon = 'fa-exclamation-triangle';
-    } elseif ($schema->status === 'critical') {
+    } else if ($schema->status === 'critical') {
         $statusclass = 'badge-danger';
         $statusicon = 'fa-times-circle';
     }
@@ -187,7 +187,7 @@ $enabledcount = count($activeprotos);
 if (!$wsenabled) {
     $wsstatusclass = 'badge-danger';
     $wsstatuslabel = get_string('ws_status_disabled', 'local_wsmanager');
-} elseif ($enabledcount === 0) {
+} else if ($enabledcount === 0) {
     $wsstatusclass = 'badge-warning';
     $wsstatuslabel = get_string('ws_status_warning', 'local_wsmanager');
 } else {
@@ -199,8 +199,8 @@ if (!$wsenabled) {
 $healthrows = $DB->get_records_sql(
     "SELECT status, COUNT(*) AS cnt FROM {local_wsmanager_schemas} GROUP BY status"
 );
-$healthhealthy  = (int)($healthrows['healthy']->cnt  ?? 0);
-$healthwarning  = (int)($healthrows['warning']->cnt  ?? 0);
+$healthhealthy  = (int)($healthrows['healthy']->cnt ?? 0);
+$healthwarning  = (int)($healthrows['warning']->cnt ?? 0);
 $healthcritical = (int)($healthrows['critical']->cnt ?? 0);
 
 $templatedata = [
