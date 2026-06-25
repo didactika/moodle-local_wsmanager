@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\task;
+namespace local_servicemanager\task;
 
 /**
  * Task to clean up old schema versions.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -32,7 +32,7 @@ class version_cleanup_task extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('task_version_cleanup', 'local_wsmanager');
+        return get_string('task_version_cleanup', 'local_servicemanager');
     }
 
     /**
@@ -42,12 +42,12 @@ class version_cleanup_task extends \core\task\scheduled_task {
         global $DB;
 
         // Check if enabled.
-        if (!get_config('local_wsmanager', 'version_retention_enabled')) {
+        if (!get_config('local_servicemanager', 'version_retention_enabled')) {
             mtrace('Version retention is disabled.');
             return;
         }
 
-        $maxversions = (int)get_config('local_wsmanager', 'version_retention_max');
+        $maxversions = (int)get_config('local_servicemanager', 'version_retention_max');
         if ($maxversions <= 0) {
             mtrace('Invalid max versions setting. Skipping.');
             return;
@@ -56,7 +56,7 @@ class version_cleanup_task extends \core\task\scheduled_task {
         mtrace("Running version cleanup. Maintaining max $maxversions versions per schema.");
 
         // Get all schemas.
-        $schemas = $DB->get_records('local_wsmanager_schemas');
+        $schemas = $DB->get_records('local_servicemanager_schemas');
 
         foreach ($schemas as $schema) {
             mtrace("Processing schema: {$schema->name} (ID: {$schema->id})");
@@ -64,7 +64,7 @@ class version_cleanup_task extends \core\task\scheduled_task {
             // Get all history records for this schema, ordered by timecreated DESC.
             // We want to KEEP the top N records.
             $history = $DB->get_records(
-                'local_wsmanager_history',
+                'local_servicemanager_history',
                 ['schemaid' => $schema->id],
                 'timecreated DESC',
                 'id, timecreated'
@@ -83,7 +83,7 @@ class version_cleanup_task extends \core\task\scheduled_task {
             mtrace("  - Has $count versions. Deleting $deletecount old versions.");
 
             $ids = array_keys($todelete);
-            $DB->delete_records_list('local_wsmanager_history', 'id', $ids);
+            $DB->delete_records_list('local_servicemanager_history', 'id', $ids);
 
             mtrace("  - Deleted IDs: " . implode(', ', $ids));
         }

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\form;
+namespace local_servicemanager\form;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -23,7 +23,7 @@ require_once($CFG->libdir . '/formslib.php');
 /**
  * Form for importing schemas.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -39,7 +39,7 @@ class import_schema_form extends \moodleform {
         $mform->addElement(
             'filepicker',
             'importfile',
-            get_string('import_file', 'local_wsmanager'),
+            get_string('import_file', 'local_servicemanager'),
             null,
             [
                 'maxfiles' => 1,
@@ -47,22 +47,22 @@ class import_schema_form extends \moodleform {
             ]
         );
         $mform->addRule('importfile', get_string('required'), 'required', null, 'client');
-        $mform->addHelpButton('importfile', 'import_file', 'local_wsmanager');
+        $mform->addHelpButton('importfile', 'import_file', 'local_servicemanager');
 
         // Conflict handling.
-        $mform->addElement('header', 'conflicthandling', get_string('conflict_handling', 'local_wsmanager'));
+        $mform->addElement('header', 'conflicthandling', get_string('conflict_handling', 'local_servicemanager'));
 
         $conflictoptions = [
-            'skip' => get_string('conflict_skip', 'local_wsmanager'),
-            'overwrite' => get_string('conflict_overwrite', 'local_wsmanager'),
-            'rename' => get_string('conflict_rename', 'local_wsmanager'),
+            'skip' => get_string('conflict_skip', 'local_servicemanager'),
+            'overwrite' => get_string('conflict_overwrite', 'local_servicemanager'),
+            'rename' => get_string('conflict_rename', 'local_servicemanager'),
         ];
-        $mform->addElement('select', 'conflict_action', get_string('conflict_action', 'local_wsmanager'), $conflictoptions);
+        $mform->addElement('select', 'conflict_action', get_string('conflict_action', 'local_servicemanager'), $conflictoptions);
         $mform->setDefault('conflict_action', 'skip');
-        $mform->addHelpButton('conflict_action', 'conflict_action', 'local_wsmanager');
+        $mform->addHelpButton('conflict_action', 'conflict_action', 'local_servicemanager');
 
         // Submit buttons.
-        $this->add_action_buttons(true, get_string('import', 'local_wsmanager'));
+        $this->add_action_buttons(true, get_string('import', 'local_servicemanager'));
     }
 
     /**

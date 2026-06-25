@@ -5,7 +5,7 @@
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @module     local_wsmanager/token_manager
+ * @module     local_servicemanager/token_manager
  */
 
 import { get_string as getString } from 'core/str';
@@ -98,7 +98,7 @@ const showCopySuccess = (button) => {
     button.innerHTML = '<i class="fa fa-check mr-1"></i>Copied!';
     button.className = button.className.replace('btn-success', '').replace('btn-outline-secondary', '') + ' btn-success';
 
-    getString('copied', 'local_wsmanager').then((copiedStr) => {
+    getString('copied', 'local_servicemanager').then((copiedStr) => {
         button.innerHTML = '<i class="fa fa-check mr-1"></i>' + copiedStr;
     }).catch(() => {
     });

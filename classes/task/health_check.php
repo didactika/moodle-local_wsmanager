@@ -14,20 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager\task;
+namespace local_servicemanager\task;
 
-use local_wsmanager\schema\manager;
-use local_wsmanager\schema\yaml_parser;
-use local_wsmanager\automation\user_manager;
-use local_wsmanager\automation\service_manager;
-use local_wsmanager\automation\token_manager;
-use local_wsmanager\automation\capability_calculator;
-use local_wsmanager\notification\manager as notification_manager;
+use local_servicemanager\schema\manager;
+use local_servicemanager\schema\yaml_parser;
+use local_servicemanager\automation\user_manager;
+use local_servicemanager\automation\service_manager;
+use local_servicemanager\automation\token_manager;
+use local_servicemanager\automation\capability_calculator;
+use local_servicemanager\notification\manager as notification_manager;
 
 /**
  * Scheduled task for health checks
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -40,7 +40,7 @@ class health_check extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name(): string {
-        return get_string('healthcheck_task', 'local_wsmanager');
+        return get_string('healthcheck_task', 'local_servicemanager');
     }
 
     /**
@@ -79,7 +79,7 @@ class health_check extends \core\task\scheduled_task {
         }
 
         // Send notifications based on configuration.
-        $notifylevel = get_config('local_wsmanager', 'notification_level');
+        $notifylevel = get_config('local_servicemanager', 'notification_level');
         $shouldnotify = !empty($issues);
 
         // If no issues, but level is 'all', notify anyway.
@@ -338,12 +338,12 @@ class health_check extends \core\task\scheduled_task {
         $record->details = json_encode($result['details']);
         $record->timecreated = time();
 
-        $DB->insert_record('local_wsmanager_healthlog', $record);
+        $DB->insert_record('local_servicemanager_logs', $record);
 
         // Clean old logs (keep last 30 days).
         $cutoff = time() - (30 * 24 * 60 * 60);
         $DB->delete_records_select(
-            'local_wsmanager_healthlog',
+            'local_servicemanager_logs',
             'schemaid = :schemaid AND timecreated < :cutoff',
             ['schemaid' => $schemaid, 'cutoff' => $cutoff]
         );

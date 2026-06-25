@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_wsmanager;
+namespace local_servicemanager;
 
 /**
  * Unit tests for schema manager class.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @category   test
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \local_wsmanager\schema\manager
+ * @covers     \local_servicemanager\schema\manager
  */
 final class manager_test extends \advanced_testcase {
     /**
@@ -53,7 +53,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), true);
 
         $this->assertArrayHasKey('id', $result);
@@ -61,7 +61,7 @@ YAML;
         $this->assertNotEmpty($result['token']);
 
         // Verify database record.
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertNotFalse($schema);
         $this->assertEquals('test.service', $schema->schema_id);
         $this->assertEquals('Test Service', $schema->name);
@@ -75,7 +75,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         $schema = $manager->get_schema($result['id']);
@@ -92,7 +92,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
 
         // Initially empty.
         $schemas = $manager->get_all_schemas();
@@ -115,7 +115,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         // Add a function (content change) AND increment version.
@@ -132,7 +132,7 @@ YAML;
 
         $manager->update_schema($result['id'], $updateyaml);
 
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertEquals('Updated Test Service', $schema->name);
         $this->assertEquals('1.1.0', $schema->version);
     }
@@ -146,7 +146,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         // Change name only, keep version 1.0.0.
@@ -162,7 +162,7 @@ YAML;
 
         $manager->update_schema($result['id'], $updateyaml);
 
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertEquals('Renamed Service', $schema->name);
         $this->assertEquals('1.0.0', $schema->version);
     }
@@ -175,7 +175,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         // Add function, keep 1.0.0.
@@ -191,7 +191,7 @@ definition:
 YAML;
 
         $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage(get_string('error_version_change_required', 'local_wsmanager'));
+        $this->expectExceptionMessage(get_string('error_version_change_required', 'local_servicemanager'));
         $manager->update_schema($result['id'], $updateyaml);
     }
 
@@ -203,7 +203,7 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         // Same content, but increment to 1.1.0.
@@ -218,7 +218,7 @@ definition:
 YAML;
 
         $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage(get_string('error_version_change_forbidden', 'local_wsmanager'));
+        $this->expectExceptionMessage(get_string('error_version_change_forbidden', 'local_servicemanager'));
         $manager->update_schema($result['id'], $updateyaml);
     }
 
@@ -232,11 +232,11 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), true);
         $id = $result['id'];
 
-        $before = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $before = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
         $this->assertNotEmpty($before->userid);
         $this->assertNotEmpty($before->roleid);
         $this->assertNotEmpty($before->serviceid);
@@ -260,7 +260,7 @@ definition:
 YAML;
         $manager->update_schema($id, $updateyaml);
 
-        $after = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $after = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
 
         // Role and service were recreated and written back; the user is unchanged.
         $this->assertEquals($before->userid, $after->userid);
@@ -286,11 +286,11 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
         $id = $result['id'];
 
-        $before = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $before = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
 
         // Delete the user the production way (munges the username so it can be reused).
         delete_user($DB->get_record('user', ['id' => $before->userid]));
@@ -308,7 +308,7 @@ definition:
 YAML;
         $manager->update_schema($id, $updateyaml);
 
-        $after = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $after = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
 
         // A fresh, active user was provisioned and written back to the schema row.
         $this->assertNotEquals($before->userid, $after->userid);
@@ -326,11 +326,11 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), true);
         $id = $result['id'];
 
-        $before = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $before = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
 
         // Delete the service AND its token.
         $DB->delete_records('external_services', ['id' => $before->serviceid]);
@@ -348,7 +348,7 @@ definition:
 YAML;
         $manager->update_schema($id, $updateyaml);
 
-        $after = $DB->get_record('local_wsmanager_schemas', ['id' => $id]);
+        $after = $DB->get_record('local_servicemanager_schemas', ['id' => $id]);
 
         // A new service was created and the stale token reference was cleared.
         $this->assertNotEmpty($after->serviceid);
@@ -364,14 +364,14 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
-        $this->assertNotFalse($DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]));
+        $this->assertNotFalse($DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]));
 
         $manager->delete_schema($result['id']);
 
-        $this->assertFalse($DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]));
+        $this->assertFalse($DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]));
     }
 
     /**
@@ -382,21 +382,21 @@ YAML;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $manager = new \local_wsmanager\schema\manager();
+        $manager = new \local_servicemanager\schema\manager();
         $result = $manager->create_schema($this->get_valid_yaml(), false);
 
         // Initially enabled.
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertEquals(1, $schema->enabled);
 
         // Disable.
         $manager->set_enabled($result['id'], false);
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertEquals(0, $schema->enabled);
 
         // Re-enable.
         $manager->set_enabled($result['id'], true);
-        $schema = $DB->get_record('local_wsmanager_schemas', ['id' => $result['id']]);
+        $schema = $DB->get_record('local_servicemanager_schemas', ['id' => $result['id']]);
         $this->assertEquals(1, $schema->enabled);
     }
 }

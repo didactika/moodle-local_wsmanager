@@ -1,4 +1,4 @@
-@local @local_wsmanager
+@local @local_servicemanager
 Feature: Schema editing
   In order to update web service configurations
   As an administrator

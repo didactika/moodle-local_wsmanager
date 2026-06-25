@@ -17,7 +17,7 @@
 /**
  * Regenerate token page
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @author     Hector Arrechea
  * @copyright  2026 Didactika.org
@@ -28,55 +28,55 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/wsmanager:manage', $context);
+require_capability('local/servicemanager:manage', $context);
 
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/regenerate_token.php', ['id' => $id]));
-$PAGE->set_title(get_string('action_regenerate_token', 'local_wsmanager'));
-$PAGE->set_heading(get_string('action_regenerate_token', 'local_wsmanager'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/regenerate_token.php', ['id' => $id]));
+$PAGE->set_title(get_string('action_regenerate_token', 'local_servicemanager'));
+$PAGE->set_heading(get_string('action_regenerate_token', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 $schema = $manager->get_schema($id);
 
 if (!$schema) {
     redirect(
-        new moodle_url('/local/wsmanager/pages/dashboard.php'),
-        get_string('schema_not_found', 'local_wsmanager'),
+        new moodle_url('/local/servicemanager/pages/dashboard.php'),
+        get_string('schema_not_found', 'local_servicemanager'),
         null,
         \core\output\notification::NOTIFY_WARNING
     );
 }
 
-$viewurl = new moodle_url('/local/wsmanager/pages/view.php', ['id' => $id]);
+$viewurl = new moodle_url('/local/servicemanager/pages/view.php', ['id' => $id]);
 
 if ($confirm && confirm_sesskey()) {
     // Regenerate the token.
-    $tokenmanager = new \local_wsmanager\automation\token_manager();
+    $tokenmanager = new \local_servicemanager\automation\token_manager();
     $result = $tokenmanager->regenerate_token($id);
 
     // Store token in session for display.
-    $SESSION->wsmanager_new_token = $result['token'];
-    $SESSION->wsmanager_schema_id = $id;
+    $SESSION->servicemanager_new_token = $result['token'];
+    $SESSION->servicemanager_schema_id = $id;
 
-    \core\notification::success(get_string('token_regenerated', 'local_wsmanager'));
-    redirect(new moodle_url('/local/wsmanager/pages/view.php', ['id' => $id, 'newtoken' => 1]));
+    \core\notification::success(get_string('token_regenerated', 'local_servicemanager'));
+    redirect(new moodle_url('/local/servicemanager/pages/view.php', ['id' => $id, 'newtoken' => 1]));
 }
 
 // Show confirmation.
 echo $OUTPUT->header();
 
-$confirmurl = new moodle_url('/local/wsmanager/pages/regenerate_token.php', [
+$confirmurl = new moodle_url('/local/servicemanager/pages/regenerate_token.php', [
     'id' => $id,
     'confirm' => 1,
     'sesskey' => sesskey(),
 ]);
 
 echo $OUTPUT->confirm(
-    get_string('confirm_regenerate_token', 'local_wsmanager'),
+    get_string('confirm_regenerate_token', 'local_servicemanager'),
     $confirmurl,
     $viewurl
 );

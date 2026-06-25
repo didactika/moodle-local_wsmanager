@@ -1,7 +1,7 @@
 /**
  * Health logs filter for Service Schema view page.
  *
- * @module     local_wsmanager/health_log_filter
+ * @module     local_servicemanager/health_log_filter
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -1,44 +1,44 @@
-<div class="wsmanager-documentation">
+<div class="servicemanager-documentation">
     {{! Back button }}
     <div class="mb-4">
         <a href="{{backurl}}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_wsmanager{{/str}}
+            <i class="fa fa-arrow-left mr-2"></i>{{#str}}back, local_servicemanager{{/str}}
         </a>
     </div>
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="fa fa-book mr-2"></i>{{#str}}schema_reference, local_wsmanager{{/str}}</h4>
+            <h4 class="mb-0"><i class="fa fa-book mr-2"></i>{{#str}}schema_reference, local_servicemanager{{/str}}</h4>
         </div>
         <div class="card-body">
             {{! Quick links }}
-            <h5 class="mb-3">{{#str}}quick_links, local_wsmanager{{/str}}</h5>
+            <h5 class="mb-3">{{#str}}quick_links, local_servicemanager{{/str}}</h5>
             <ul class="list-unstyled mb-4">
-                <li><a href="#structure"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_structure, local_wsmanager{{/str}}</a></li>
-                <li><a href="#meta"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_meta, local_wsmanager{{/str}}</a></li>
-                <li><a href="#definition"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_definition, local_wsmanager{{/str}}</a></li>
-                <li><a href="#naming"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_naming, local_wsmanager{{/str}}</a></li>
-                <li><a href="#example"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_example, local_wsmanager{{/str}}</a></li>
+                <li><a href="#structure"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_structure, local_servicemanager{{/str}}</a></li>
+                <li><a href="#meta"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_meta, local_servicemanager{{/str}}</a></li>
+                <li><a href="#definition"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_definition, local_servicemanager{{/str}}</a></li>
+                <li><a href="#naming"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_naming, local_servicemanager{{/str}}</a></li>
+                <li><a href="#example"><i class="fa fa-chevron-right mr-2"></i>{{#str}}doc_example, local_servicemanager{{/str}}</a></li>
             </ul>
 
             {{! Download example button }}
             <div class="alert alert-success mb-4">
                 <i class="fa fa-download mr-2"></i>
-                <a href="{{downloadurl}}" class="alert-link">{{#str}}download_example, local_wsmanager{{/str}}</a>
-                - {{#str}}download_example_desc, local_wsmanager{{/str}}
+                <a href="{{downloadurl}}" class="alert-link">{{#str}}download_example, local_servicemanager{{/str}}</a>
+                - {{#str}}download_example_desc, local_servicemanager{{/str}}
             </div>
 
             {{! Structure section }}
-            <h4 id="structure" class="mt-4 mb-3 text-primary">{{#str}}doc_structure, local_wsmanager{{/str}}</h4>
-            <p>{{#str}}doc_structure_desc, local_wsmanager{{/str}}</p>
+            <h4 id="structure" class="mt-4 mb-3 text-primary">{{#str}}doc_structure, local_servicemanager{{/str}}</h4>
+            <p>{{#str}}doc_structure_desc, local_servicemanager{{/str}}</p>
             <pre class="bg-light p-3 rounded"><code>{{structure_code}}</code></pre>
 
             {{! Meta section }}
-            <h4 id="meta" class="mt-4 mb-3 text-primary">{{#str}}doc_meta, local_wsmanager{{/str}}</h4>
+            <h4 id="meta" class="mt-4 mb-3 text-primary">{{#str}}doc_meta, local_servicemanager{{/str}}</h4>
             <table class="table table-bordered table-striped">
                 <thead class="thead-light">
                     <tr>
-                        <th>{{#str}}field, local_wsmanager{{/str}}</th>
+                        <th>{{#str}}field, local_servicemanager{{/str}}</th>
                         <th>{{#str}}required{{/str}}</th>
                         <th>{{#str}}description{{/str}}</th>
                     </tr>
@@ -47,27 +47,27 @@
                     <tr>
                         <td><code>id</code></td>
                         <td><span class="badge badge-success">{{#str}}yes{{/str}}</span></td>
-                        <td>{{#str}}doc_meta_id, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_meta_id, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>name</code></td>
                         <td><span class="badge badge-success">{{#str}}yes{{/str}}</span></td>
-                        <td>{{#str}}doc_meta_name, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_meta_name, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>version</code></td>
                         <td><span class="badge badge-success">{{#str}}yes{{/str}}</span></td>
-                        <td>{{#str}}doc_meta_version, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_meta_version, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>maintainer</code></td>
                         <td><span class="badge badge-secondary">{{#str}}no{{/str}}</span></td>
-                        <td>{{#str}}doc_meta_maintainer, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_meta_maintainer, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>description</code></td>
                         <td><span class="badge badge-secondary">{{#str}}no{{/str}}</span></td>
-                        <td>{{#str}}doc_meta_description, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_meta_description, local_servicemanager{{/str}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -75,7 +75,7 @@
             <table class="table table-bordered table-striped mt-3">
                 <thead class="thead-light">
                     <tr>
-                        <th>{{#str}}field, local_wsmanager{{/str}}</th>
+                        <th>{{#str}}field, local_servicemanager{{/str}}</th>
                         <th>{{#str}}required{{/str}}</th>
                         <th>{{#str}}description{{/str}}</th>
                     </tr>
@@ -84,42 +84,42 @@
                     <tr>
                         <td><code>plugins</code></td>
                         <td><span class="badge badge-secondary">{{#str}}no{{/str}}</span></td>
-                        <td>{{#str}}doc_requirements_plugins, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_requirements_plugins, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>download_files</code></td>
                         <td><span class="badge badge-secondary">{{#str}}no{{/str}}</span></td>
-                        <td>{{#str}}doc_requirements_download_files, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_requirements_download_files, local_servicemanager{{/str}}</td>
                     </tr>
                     <tr>
                         <td><code>upload_files</code></td>
                         <td><span class="badge badge-secondary">{{#str}}no{{/str}}</span></td>
-                        <td>{{#str}}doc_requirements_upload_files, local_wsmanager{{/str}}</td>
+                        <td>{{#str}}doc_requirements_upload_files, local_servicemanager{{/str}}</td>
                     </tr>
                 </tbody>
             </table>
 
             {{! Definition section }}
-            <h4 id="definition" class="mt-4 mb-3 text-primary">{{#str}}doc_definition, local_wsmanager{{/str}}</h4>
-            <p>{{#str}}doc_definition_desc, local_wsmanager{{/str}}</p>
+            <h4 id="definition" class="mt-4 mb-3 text-primary">{{#str}}doc_definition, local_servicemanager{{/str}}</h4>
+            <p>{{#str}}doc_definition_desc, local_servicemanager{{/str}}</p>
 
-            <h5 class="mt-3">{{#str}}functions, local_wsmanager{{/str}}</h5>
-            <p>{{#str}}doc_functions_desc, local_wsmanager{{/str}}</p>
+            <h5 class="mt-3">{{#str}}functions, local_servicemanager{{/str}}</h5>
+            <p>{{#str}}doc_functions_desc, local_servicemanager{{/str}}</p>
             <pre class="bg-light p-3 rounded"><code>{{function_code}}</code></pre>
             <div class="alert alert-info mt-3">
                 <i class="fa fa-info-circle mr-2"></i>
-                {{#str}}doc_default_capabilities, local_wsmanager{{/str}}
+                {{#str}}doc_default_capabilities, local_servicemanager{{/str}}
                 <code class="ml-1">webservice/rest:use</code>, <code>webservice/soap:use</code>.
             </div>
 
             {{! Naming conventions }}
-            <h4 id="naming" class="mt-4 mb-3 text-primary">{{#str}}doc_naming, local_wsmanager{{/str}}</h4>
+            <h4 id="naming" class="mt-4 mb-3 text-primary">{{#str}}doc_naming, local_servicemanager{{/str}}</h4>
             <table class="table table-bordered table-striped">
                 <thead class="thead-light">
                     <tr>
-                        <th>{{#str}}resource, local_wsmanager{{/str}}</th>
-                        <th>{{#str}}pattern, local_wsmanager{{/str}}</th>
-                        <th>{{#str}}doc_example_col, local_wsmanager{{/str}}</th>
+                        <th>{{#str}}resource, local_servicemanager{{/str}}</th>
+                        <th>{{#str}}pattern, local_servicemanager{{/str}}</th>
+                        <th>{{#str}}doc_example_col, local_servicemanager{{/str}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,11 +157,11 @@
             </table>
 
             {{! Example section }}
-            <h4 id="example" class="mt-4 mb-3 text-primary">{{#str}}doc_example, local_wsmanager{{/str}}</h4>
+            <h4 id="example" class="mt-4 mb-3 text-primary">{{#str}}doc_example, local_servicemanager{{/str}}</h4>
             <p>
-                {{#str}}doc_example_complete_desc, local_wsmanager{{/str}}
-                <a href="{{downloadurl}}"><i class="fa fa-download mr-1"></i>{{#str}}download_example, local_wsmanager{{/str}}</a>
-                {{#str}}doc_example_to_get_started, local_wsmanager{{/str}}
+                {{#str}}doc_example_complete_desc, local_servicemanager{{/str}}
+                <a href="{{downloadurl}}"><i class="fa fa-download mr-1"></i>{{#str}}download_example, local_servicemanager{{/str}}</a>
+                {{#str}}doc_example_to_get_started, local_servicemanager{{/str}}
             </p>
         </div>
     </div>

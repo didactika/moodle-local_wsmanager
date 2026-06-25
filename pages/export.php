@@ -17,7 +17,7 @@
 /**
  * Export schema(s) page.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,15 +29,15 @@ $id = optional_param('id', 0, PARAM_INT);
 $all = optional_param('all', 0, PARAM_BOOL);
 
 require_login();
-require_capability('local/wsmanager:view', context_system::instance());
+require_capability('local/servicemanager:view', context_system::instance());
 
-$manager = new \local_wsmanager\schema\manager();
+$manager = new \local_servicemanager\schema\manager();
 
 // Export single schema as YAML.
 if ($id) {
     $schema = $manager->get_schema($id);
     if (!$schema) {
-        throw new moodle_exception('schemanotfound', 'local_wsmanager');
+        throw new moodle_exception('schemanotfound', 'local_servicemanager');
     }
 
     $filename = $schema->schema_id . '.yaml';
@@ -59,19 +59,19 @@ if ($all) {
 
     if (empty($schemas)) {
         redirect(
-            new moodle_url('/local/wsmanager/pages/dashboard.php'),
-            get_string('no_schemas_to_export', 'local_wsmanager'),
+            new moodle_url('/local/servicemanager/pages/dashboard.php'),
+            get_string('no_schemas_to_export', 'local_servicemanager'),
             null,
             \core\output\notification::NOTIFY_WARNING
         );
     }
 
-    $tempdir = make_temp_directory('wsmanager_export');
+    $tempdir = make_temp_directory('servicemanager_export');
     $zipfilepath = $tempdir . '/schemas_export_' . date('Ymd_His') . '.zip';
 
     $zip = new ZipArchive();
     if ($zip->open($zipfilepath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-        throw new moodle_exception('zipcreationfailed', 'local_wsmanager');
+        throw new moodle_exception('zipcreationfailed', 'local_servicemanager');
     }
 
     foreach ($schemas as $schema) {
@@ -112,4 +112,4 @@ if ($all) {
 }
 
 // No parameters - redirect to dashboard.
-redirect(new moodle_url('/local/wsmanager/pages/dashboard.php'));
+redirect(new moodle_url('/local/servicemanager/pages/dashboard.php'));

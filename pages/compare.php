@@ -17,7 +17,7 @@
 /**
  * Compare versions page for schemas.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -43,31 +43,31 @@ if (empty($v1) || empty($v2)) {
     throw new \moodle_exception('missingparam', 'error', '', 'v1, v2 or compare[]');
 }
 
-require_capability('local/wsmanager:view', context_system::instance());
+require_capability('local/servicemanager:view', context_system::instance());
 
-$manager = new \local_wsmanager\schema\manager();
-$historymanager = new \local_wsmanager\schema\history_manager();
+$manager = new \local_servicemanager\schema\manager();
+$historymanager = new \local_servicemanager\schema\history_manager();
 
 $schema = $manager->get_schema($id);
 if (!$schema) {
-    throw new \moodle_exception('error_schema_not_found', 'local_wsmanager');
+    throw new \moodle_exception('error_schema_not_found', 'local_servicemanager');
 }
 
 $urlparams = ['id' => $id, 'v1' => $v1, 'v2' => $v2];
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/compare.php', $urlparams));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/compare.php', $urlparams));
 $PAGE->set_context(context_system::instance());
-$PAGE->set_title($schema->name . ': ' . get_string('compare_versions', 'local_wsmanager'));
+$PAGE->set_title($schema->name . ': ' . get_string('compare_versions', 'local_servicemanager'));
 $PAGE->set_heading($schema->name);
 $PAGE->set_pagelayout('admin');
 
 // Navigation.
-$PAGE->navbar->add(get_string('pluginname', 'local_wsmanager'), new moodle_url('/local/wsmanager/pages/dashboard.php'));
-$PAGE->navbar->add($schema->name, new moodle_url('/local/wsmanager/pages/view.php', ['id' => $id]));
+$PAGE->navbar->add(get_string('pluginname', 'local_servicemanager'), new moodle_url('/local/servicemanager/pages/dashboard.php'));
+$PAGE->navbar->add($schema->name, new moodle_url('/local/servicemanager/pages/view.php', ['id' => $id]));
 $PAGE->navbar->add(
-    get_string('version_history', 'local_wsmanager'),
-    new moodle_url('/local/wsmanager/pages/history.php', ['id' => $id])
+    get_string('version_history', 'local_servicemanager'),
+    new moodle_url('/local/servicemanager/pages/history.php', ['id' => $id])
 );
-$PAGE->navbar->add(get_string('compare_versions', 'local_wsmanager'));
+$PAGE->navbar->add(get_string('compare_versions', 'local_servicemanager'));
 
 echo $OUTPUT->header();
 
@@ -76,7 +76,7 @@ $ver1 = $historymanager->get_version($v1);
 $ver2 = $historymanager->get_version($v2);
 
 if (!$ver1 || !$ver2) {
-    throw new \moodle_exception('historynotfound', 'local_wsmanager');
+    throw new \moodle_exception('historynotfound', 'local_servicemanager');
 }
 
 // Calculate comparison.
@@ -118,8 +118,8 @@ for ($i = 0; $i < $max; $i++) {
 }
 
 $context = [
-    'backurl' => (new moodle_url('/local/wsmanager/pages/history.php', ['id' => $id]))->out(false),
-    'pagetitle' => get_string('compare_versions', 'local_wsmanager'),
+    'backurl' => (new moodle_url('/local/servicemanager/pages/history.php', ['id' => $id]))->out(false),
+    'pagetitle' => get_string('compare_versions', 'local_servicemanager'),
     'v1' => [
         'version' => $ver1->version,
         'date' => userdate($ver1->timecreated),
@@ -133,6 +133,6 @@ $context = [
     'lines' => $lines,
 ];
 
-echo $OUTPUT->render_from_template('local_wsmanager/compare_page', $context);
+echo $OUTPUT->render_from_template('local_servicemanager/compare_page', $context);
 
 echo $OUTPUT->footer();

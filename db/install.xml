@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/wsmanager/db" VERSION="20260202" COMMENT="XMLDB file for local_wsmanager">
+<XMLDB PATH="local/servicemanager/db" VERSION="20260202" COMMENT="XMLDB file for local_servicemanager">
   <TABLES>
-    <TABLE NAME="local_wsmanager_schemas" COMMENT="Stores service schema definitions">
+    <TABLE NAME="local_servicemanager_schemas" COMMENT="Stores service schema definitions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="schema_id" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Unique ID, only letters, numbers and dots"/>
@@ -29,7 +29,7 @@
         <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_wsmanager_healthlog" COMMENT="Health check logs for schemas">
+    <TABLE NAME="local_servicemanager_logs" COMMENT="Health check logs for schemas">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="schemaid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Reference to schema"/>
@@ -40,13 +40,13 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_wsmanager_schemas" REFFIELDS="id"/>
+        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_servicemanager_schemas" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="schemaid_time_idx" UNIQUE="false" FIELDS="schemaid, timecreated"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_wsmanager_history" COMMENT="Version history for schema changes">
+    <TABLE NAME="local_servicemanager_history" COMMENT="Version history for schema changes">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="schemaid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Reference to schema"/>
@@ -59,7 +59,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_wsmanager_schemas" REFFIELDS="id"/>
+        <KEY NAME="schemaid_fk" TYPE="foreign" FIELDS="schemaid" REFTABLE="local_servicemanager_schemas" REFFIELDS="id"/>
         <KEY NAME="changedby_fk" TYPE="foreign" FIELDS="changedby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>

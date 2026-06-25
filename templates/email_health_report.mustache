@@ -1,5 +1,5 @@
 {{!
-    @template local_wsmanager/email_health_report
+    @template local_servicemanager/email_health_report
 
     Email template for health check reports.
 
@@ -141,7 +141,7 @@
             <p>{{summary_text}}</p>
 
             {{#has_issues}}
-            <h3>{{#str}}issues, local_wsmanager{{/str}}</h3>
+            <h3>{{#str}}issues, local_servicemanager{{/str}}</h3>
             {{#issues}}
             <div class="schema-item">
                 <div class="schema-name">
@@ -154,13 +154,13 @@
                     <li>{{.}}</li>
                     {{/messages}}
                 </ul>
-                <a href="{{view_url}}" style="font-size: 12px;">{{#str}}view_schema, local_wsmanager{{/str}}</a>
+                <a href="{{view_url}}" style="font-size: 12px;">{{#str}}view_schema, local_servicemanager{{/str}}</a>
             </div>
             {{/issues}}
             {{/has_issues}}
 
             {{#has_healthy}}
-            <h3 style="margin-top: 20px;">{{#str}}status_healthy, local_wsmanager{{/str}}</h3>
+            <h3 style="margin-top: 20px;">{{#str}}status_healthy, local_servicemanager{{/str}}</h3>
             <ul>
                 {{#healthy_schemas}}
                 <li>
@@ -171,7 +171,7 @@
             {{/has_healthy}}
 
             <div style="text-align: center;">
-                <a href="{{dashboard_url}}" class="btn">{{#str}}dashboard, local_wsmanager{{/str}}</a>
+                <a href="{{dashboard_url}}" class="btn">{{#str}}dashboard, local_servicemanager{{/str}}</a>
             </div>
         </div>
 
@@ -179,7 +179,7 @@
             {{#logo_url}}
             <img src="{{logo_url}}" alt="{{site_name}}" style="max-height: 50px; margin-bottom: 10px;">
             {{/logo_url}}
-            <p>{{#str}}email_footer, local_wsmanager{{/str}}</p>
+            <p>{{#str}}email_footer, local_servicemanager{{/str}}</p>
             <a href="{{site_url}}" style="color: {{primary_color}};">{{site_url}}</a>
         </div>
     </div>

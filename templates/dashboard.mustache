@@ -1,5 +1,5 @@
 {{!
-    @template local_wsmanager/dashboard
+    @template local_servicemanager/dashboard
 
     Dashboard template for Web Service Manager.
 
@@ -14,19 +14,19 @@
     * filter_count - Number of active filters
 }}
 
-<div class="wsmanager-dashboard">
+<div class="servicemanager-dashboard">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">{{#str}}dashboard, local_wsmanager{{/str}}</h2>
+        <h2 class="mb-0">{{#str}}dashboard, local_servicemanager{{/str}}</h2>
         <div class="btn-toolbar">
             {{#can_manage}}
             <a href="{{import_url}}" class="btn btn-primary">
-                <i class="fa fa-download mr-2"></i>{{#str}}import_schemas, local_wsmanager{{/str}}
+                <i class="fa fa-download mr-2"></i>{{#str}}import_schemas, local_servicemanager{{/str}}
             </a>
             {{/can_manage}}
             {{#has_any_schemas}}
             <a href="{{export_all_url}}" class="btn btn-outline-secondary ml-2">
-                <i class="fa fa-file-archive-o mr-2"></i>{{#str}}export_all, local_wsmanager{{/str}}
+                <i class="fa fa-file-archive-o mr-2"></i>{{#str}}export_all, local_servicemanager{{/str}}
             </a>
             {{/has_any_schemas}}
         </div>
@@ -40,7 +40,7 @@
              style="cursor: pointer;">
             <div>
                 <i class="fa fa-plug mr-2"></i>
-                <strong>{{#str}}ws_status_panel, local_wsmanager{{/str}}</strong>
+                <strong>{{#str}}ws_status_panel, local_servicemanager{{/str}}</strong>
             </div>
             <div class="d-flex align-items-center">
                 <span class="badge {{ws_status.status_class}} mr-2">
@@ -54,7 +54,7 @@
                 <div class="row">
                     <div class="col-md-4 border-right">
                         <div class="text-muted small text-uppercase mb-1">
-                            {{#str}}ws_services_label, local_wsmanager{{/str}}
+                            {{#str}}ws_services_label, local_servicemanager{{/str}}
                         </div>
                         <span class="{{ws_status.ws_enabled_class}} font-weight-bold">
                             <i class="fa fa-circle mr-1"></i>{{ws_status.ws_enabled_label}}
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-4 pl-4 border-right">
                         <div class="text-muted small text-uppercase mb-1">
-                            {{#str}}ws_protocols_label, local_wsmanager{{/str}}
+                            {{#str}}ws_protocols_label, local_servicemanager{{/str}}
                             ({{ws_status.enabled_protocols_count}})
                         </div>
                         {{#ws_status.protocols}}
@@ -71,7 +71,7 @@
                     </div>
                     <div class="col-md-4 pl-4">
                         <div class="text-muted small text-uppercase mb-1">
-                            {{#str}}ws_health_label, local_wsmanager{{/str}}
+                            {{#str}}ws_health_label, local_servicemanager{{/str}}
                         </div>
                         <div>
                             <span class="text-success mr-3">
@@ -85,9 +85,9 @@
                             </span>
                         </div>
                         <div class="text-muted small mt-1">
-                            {{#str}}status_healthy, local_wsmanager{{/str}} ·
-                            {{#str}}status_warning, local_wsmanager{{/str}} ·
-                            {{#str}}status_critical, local_wsmanager{{/str}}
+                            {{#str}}status_healthy, local_servicemanager{{/str}} ·
+                            {{#str}}status_warning, local_servicemanager{{/str}} ·
+                            {{#str}}status_critical, local_servicemanager{{/str}}
                         </div>
                     </div>
                 </div>
@@ -95,12 +95,12 @@
             {{#ws_status.can_manage}}
             <div class="card-footer py-2 text-muted small">
                 <a href="{{ws_status.overview_url}}" target="_blank">
-                    {{#str}}ws_overview_link, local_wsmanager{{/str}}
+                    {{#str}}ws_overview_link, local_servicemanager{{/str}}
                     <i class="fa fa-external-link ml-1"></i>
                 </a>
                 <span class="mx-2">·</span>
                 <a href="{{ws_status.protocols_url}}" target="_blank">
-                    {{#str}}ws_manage_protocols_link, local_wsmanager{{/str}}
+                    {{#str}}ws_manage_protocols_link, local_servicemanager{{/str}}
                     <i class="fa fa-external-link ml-1"></i>
                 </a>
             </div>
@@ -114,18 +114,18 @@
         <div class="d-flex align-items-center">
             {{#can_manage}}
             <div class="bulk-actions d-none" id="bulk-actions-bar">
-                <span class="selected-count font-weight-bold mr-2"><span id="selected-count">0</span> {{#str}}selected, local_wsmanager{{/str}}</span>
+                <span class="selected-count font-weight-bold mr-2"><span id="selected-count">0</span> {{#str}}selected, local_servicemanager{{/str}}</span>
                 <button type="submit" form="bulk-form" name="action" value="enable" class="btn btn-sm btn-success bulk-btn-enable mr-1" style="display:none">
-                    <i class="fa fa-check mr-1"></i>{{#str}}bulk_enable, local_wsmanager{{/str}}
+                    <i class="fa fa-check mr-1"></i>{{#str}}bulk_enable, local_servicemanager{{/str}}
                 </button>
                 <button type="submit" form="bulk-form" name="action" value="disable" class="btn btn-sm btn-secondary bulk-btn-disable mr-1" style="display:none">
-                    <i class="fa fa-ban mr-1"></i>{{#str}}bulk_disable, local_wsmanager{{/str}}
+                    <i class="fa fa-ban mr-1"></i>{{#str}}bulk_disable, local_servicemanager{{/str}}
                 </button>
                 <button type="submit" form="bulk-form" name="action" value="export" class="btn btn-sm btn-info mr-1">
-                    <i class="fa fa-download mr-1"></i>{{#str}}bulk_export, local_wsmanager{{/str}}
+                    <i class="fa fa-download mr-1"></i>{{#str}}bulk_export, local_servicemanager{{/str}}
                 </button>
-                <button type="submit" form="bulk-form" name="action" value="delete" class="btn btn-sm btn-danger" onclick="return confirm('{{#str}}bulk_delete_confirm, local_wsmanager{{/str}}');">
-                    <i class="fa fa-trash mr-1"></i>{{#str}}bulk_delete, local_wsmanager{{/str}}
+                <button type="submit" form="bulk-form" name="action" value="delete" class="btn btn-sm btn-danger" onclick="return confirm('{{#str}}bulk_delete_confirm, local_servicemanager{{/str}}');">
+                    <i class="fa fa-trash mr-1"></i>{{#str}}bulk_delete, local_servicemanager{{/str}}
                 </button>
             </div>
             {{/can_manage}}
@@ -139,7 +139,7 @@
             <button class="btn btn-outline-secondary dropdown-toggle" 
                     type="button" id="filtersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-filter mr-1"></i>
-                {{#str}}filters, local_wsmanager{{/str}}
+                {{#str}}filters, local_servicemanager{{/str}}
                 {{#has_filters}}
                 <span class="badge badge-primary ml-1">{{filter_count}}</span>
                 {{/has_filters}}
@@ -148,18 +148,18 @@
                 <form method="get" action="" id="filter-form">
                     <!-- Status -->
                     <div class="mb-3">
-                        <label for="status">{{#str}}filter_status, local_wsmanager{{/str}}</label>
+                        <label for="status">{{#str}}filter_status, local_servicemanager{{/str}}</label>
                         <select name="status" id="status" class="form-control">
-                            <option value="">{{#str}}filter_status_all, local_wsmanager{{/str}}</option>
-                            <option value="healthy" {{#filter_status_healthy}}selected{{/filter_status_healthy}}>{{#str}}status_healthy, local_wsmanager{{/str}}</option>
-                            <option value="warning" {{#filter_status_warning}}selected{{/filter_status_warning}}>{{#str}}status_warning, local_wsmanager{{/str}}</option>
-                            <option value="critical" {{#filter_status_critical}}selected{{/filter_status_critical}}>{{#str}}status_critical, local_wsmanager{{/str}}</option>
+                            <option value="">{{#str}}filter_status_all, local_servicemanager{{/str}}</option>
+                            <option value="healthy" {{#filter_status_healthy}}selected{{/filter_status_healthy}}>{{#str}}status_healthy, local_servicemanager{{/str}}</option>
+                            <option value="warning" {{#filter_status_warning}}selected{{/filter_status_warning}}>{{#str}}status_warning, local_servicemanager{{/str}}</option>
+                            <option value="critical" {{#filter_status_critical}}selected{{/filter_status_critical}}>{{#str}}status_critical, local_servicemanager{{/str}}</option>
                         </select>
                     </div>
                     
                     <!-- Per page -->
                     <div class="mb-3">
-                        <label for="perpage">{{#str}}filter_per_page, local_wsmanager{{/str}}</label>
+                        <label for="perpage">{{#str}}filter_per_page, local_servicemanager{{/str}}</label>
                         <select name="perpage" id="perpage" class="form-control">
                             {{#perpage_options}}
                             <option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>
@@ -169,19 +169,19 @@
                     
                     <!-- Name search -->
                     <div class="mb-3">
-                        <label for="name">{{#str}}schema_name, local_wsmanager{{/str}}</label>
-                        <input type="text" name="name" id="name" value="{{filter_name}}" class="form-control" placeholder="{{#str}}filter_name, local_wsmanager{{/str}}">
+                        <label for="name">{{#str}}schema_name, local_servicemanager{{/str}}</label>
+                        <input type="text" name="name" id="name" value="{{filter_name}}" class="form-control" placeholder="{{#str}}filter_name, local_servicemanager{{/str}}">
                     </div>
                     
                     <!-- Date from -->
                     <div class="mb-3">
-                        <label for="datefrom_date">{{#str}}filter_date_from, local_wsmanager{{/str}}</label>
+                        <label for="datefrom_date">{{#str}}filter_date_from, local_servicemanager{{/str}}</label>
                         <input type="date" name="datefrom_date" id="datefrom_date" value="{{filter_datefrom}}" class="form-control">
                     </div>
                     
                     <!-- Date to -->
                     <div class="mb-3">
-                        <label for="dateto_date">{{#str}}filter_date_to, local_wsmanager{{/str}}</label>
+                        <label for="dateto_date">{{#str}}filter_date_to, local_servicemanager{{/str}}</label>
                         <input type="date" name="dateto_date" id="dateto_date" value="{{filter_dateto}}" class="form-control">
                     </div>
                     
@@ -192,10 +192,10 @@
                     
                     <div class="d-flex justify-content-between">
                         <a href="?" class="btn btn-secondary">
-                            <i class="fa fa-times mr-1"></i>{{#str}}filter_clear, local_wsmanager{{/str}}
+                            <i class="fa fa-times mr-1"></i>{{#str}}filter_clear, local_servicemanager{{/str}}
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-check mr-1"></i>{{#str}}filter_apply, local_wsmanager{{/str}}
+                            <i class="fa fa-check mr-1"></i>{{#str}}filter_apply, local_servicemanager{{/str}}
                         </button>
                     </div>
                 </form>
@@ -217,14 +217,14 @@
                 <tr>
                     {{#can_manage}}
                     <th class="text-center" style="width: 40px;">
-                        <input type="checkbox" id="select-all" class="bulk-checkbox-small" title="{{#str}}select_all, local_wsmanager{{/str}}">
+                        <input type="checkbox" id="select-all" class="bulk-checkbox-small" title="{{#str}}select_all, local_servicemanager{{/str}}">
                     </th>
                     {{/can_manage}}
-                    <th>{{#str}}schema_name, local_wsmanager{{/str}}</th>
-                    <th>{{#str}}schema_id, local_wsmanager{{/str}}</th>
-                    <th>{{#str}}schema_version, local_wsmanager{{/str}}</th>
-                    <th>{{#str}}schema_status, local_wsmanager{{/str}}</th>
-                    <th>{{#str}}schema_modified, local_wsmanager{{/str}}</th>
+                    <th>{{#str}}schema_name, local_servicemanager{{/str}}</th>
+                    <th>{{#str}}schema_id, local_servicemanager{{/str}}</th>
+                    <th>{{#str}}schema_version, local_servicemanager{{/str}}</th>
+                    <th>{{#str}}schema_status, local_servicemanager{{/str}}</th>
+                    <th>{{#str}}schema_modified, local_servicemanager{{/str}}</th>
                     <th class="text-right">{{#str}}actions{{/str}}</th>
                 </tr>
             </thead>
@@ -239,7 +239,7 @@
                     <td>
                         <a href="{{view_url}}" class="font-weight-bold">{{name}}</a>
                         {{^enabled}}
-                        <span class="badge badge-secondary ml-2">{{#str}}disabled, local_wsmanager{{/str}}</span>
+                        <span class="badge badge-secondary ml-2">{{#str}}disabled, local_servicemanager{{/str}}</span>
                         {{/enabled}}
                     </td>
                     <td><code>{{schema_id}}</code></td>
@@ -252,18 +252,18 @@
                     <td>{{timemodified}}</td>
                     <td class="text-right">
                         <div class="btn-group btn-group-sm">
-                            <a href="{{view_url}}" class="btn btn-outline-primary" title="{{#str}}action_view, local_wsmanager{{/str}}">
+                            <a href="{{view_url}}" class="btn btn-outline-primary" title="{{#str}}action_view, local_servicemanager{{/str}}">
                                 <i class="fa fa-eye"></i>
                             </a>
                             {{#can_manage}}
-                            <a href="{{edit_url}}" class="btn btn-outline-secondary" title="{{#str}}action_edit, local_wsmanager{{/str}}">
+                            <a href="{{edit_url}}" class="btn btn-outline-secondary" title="{{#str}}action_edit, local_servicemanager{{/str}}">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a href="{{export_url}}" class="btn btn-outline-info" title="{{#str}}action_export, local_wsmanager{{/str}}">
+                            <a href="{{export_url}}" class="btn btn-outline-info" title="{{#str}}action_export, local_servicemanager{{/str}}">
                                 <i class="fa fa-download"></i>
                             </a>
 
-                            <a href="{{delete_url}}" class="btn btn-outline-danger" title="{{#str}}action_delete, local_wsmanager{{/str}}">
+                            <a href="{{delete_url}}" class="btn btn-outline-danger" title="{{#str}}action_delete, local_servicemanager{{/str}}">
                                 <i class="fa fa-trash"></i>
                             </a>
                             {{/can_manage}}
@@ -280,12 +280,12 @@
     <div class="alert alert-info">
         <i class="fa fa-info-circle mr-2"></i>
         {{#has_filters}}
-        {{#str}}no_schemas_filtered, local_wsmanager{{/str}}
+        {{#str}}no_schemas_filtered, local_servicemanager{{/str}}
         {{/has_filters}}
         {{^has_filters}}
-        {{#str}}no_schemas, local_wsmanager{{/str}}
+        {{#str}}no_schemas, local_servicemanager{{/str}}
         <a href="{{documentation_url}}" class="ml-2 text-info">
-            <i class="fa fa-book mr-1"></i>{{#str}}view_documentation, local_wsmanager{{/str}}
+            <i class="fa fa-book mr-1"></i>{{#str}}view_documentation, local_servicemanager{{/str}}
         </a>
         {{/has_filters}}
     </div>
@@ -293,11 +293,11 @@
 
     {{#has_pagination}}
     <!-- Pagination -->
-    <nav aria-label="Schema pagination" class="wsmanager-pagination mt-4">
+    <nav aria-label="Schema pagination" class="servicemanager-pagination mt-4">
         <ul class="pagination justify-content-center">
             {{#pagination.show_first}}
             <li class="page-item">
-                <a class="page-link" href="{{pagination.first_url}}" title="{{#str}}pagination_first, local_wsmanager{{/str}}">
+                <a class="page-link" href="{{pagination.first_url}}" title="{{#str}}pagination_first, local_servicemanager{{/str}}">
                     <i class="fa fa-angle-double-left"></i>
                 </a>
             </li>
@@ -305,7 +305,7 @@
             
             {{#pagination.show_previous}}
             <li class="page-item">
-                <a class="page-link" href="{{pagination.previous_url}}" title="{{#str}}pagination_previous, local_wsmanager{{/str}}">
+                <a class="page-link" href="{{pagination.previous_url}}" title="{{#str}}pagination_previous, local_servicemanager{{/str}}">
                     <i class="fa fa-angle-left"></i>
                 </a>
             </li>
@@ -333,14 +333,14 @@
             
             {{#pagination.show_next}}
             <li class="page-item">
-                <a class="page-link" href="{{pagination.next_url}}" title="{{#str}}pagination_next, local_wsmanager{{/str}}">
+                <a class="page-link" href="{{pagination.next_url}}" title="{{#str}}pagination_next, local_servicemanager{{/str}}">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </li>
             {{/pagination.show_next}}
         </ul>
         <div class="text-center text-muted mt-2">
-            {{#str}}pagination_page_info, local_wsmanager, {"current": "{{pagination.current_page}}", "total": "{{pagination.total_pages}}"}{{/str}}
+            {{#str}}pagination_page_info, local_servicemanager, {"current": "{{pagination.current_page}}", "total": "{{pagination.total_pages}}"}{{/str}}
         </div>
     </nav>
     {{/has_pagination}}

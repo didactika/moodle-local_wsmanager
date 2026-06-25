@@ -17,7 +17,7 @@
 /**
  * Import schema(s) page.
  *
- * @package    local_wsmanager
+ * @package    local_servicemanager
  * @author     Eduardo Estrada <me@e2rd0.com>
  * @copyright  2026 Didactika.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,26 +26,26 @@
 require_once(__DIR__ . '/../../../config.php');
 
 require_login();
-require_capability('local/wsmanager:manage', context_system::instance());
+require_capability('local/servicemanager:manage', context_system::instance());
 
-$PAGE->set_url(new moodle_url('/local/wsmanager/pages/import.php'));
+$PAGE->set_url(new moodle_url('/local/servicemanager/pages/import.php'));
 $PAGE->set_context(context_system::instance());
-$PAGE->set_title(get_string('pluginname', 'local_wsmanager') . ' - ' . get_string('import_schemas', 'local_wsmanager'));
-$PAGE->set_heading(get_string('import_schemas', 'local_wsmanager'));
+$PAGE->set_title(get_string('pluginname', 'local_servicemanager') . ' - ' . get_string('import_schemas', 'local_servicemanager'));
+$PAGE->set_heading(get_string('import_schemas', 'local_servicemanager'));
 $PAGE->set_pagelayout('admin');
 
 // Navigation.
-$PAGE->navbar->add(get_string('pluginname', 'local_wsmanager'), new moodle_url('/local/wsmanager/pages/dashboard.php'));
-$PAGE->navbar->add(get_string('import_schemas', 'local_wsmanager'));
+$PAGE->navbar->add(get_string('pluginname', 'local_servicemanager'), new moodle_url('/local/servicemanager/pages/dashboard.php'));
+$PAGE->navbar->add(get_string('import_schemas', 'local_servicemanager'));
 
-$form = new \local_wsmanager\form\import_schema_form();
+$form = new \local_servicemanager\form\import_schema_form();
 
 if ($form->is_cancelled()) {
-    redirect(new moodle_url('/local/wsmanager/pages/dashboard.php'));
+    redirect(new moodle_url('/local/servicemanager/pages/dashboard.php'));
 } else if ($data = $form->get_data()) {
     // Process the import.
-    $manager = new \local_wsmanager\schema\manager();
-    $validator = new \local_wsmanager\schema\validator();
+    $manager = new \local_servicemanager\schema\manager();
+    $validator = new \local_servicemanager\schema\validator();
 
     $results = [
         'imported' => 0,
@@ -62,7 +62,7 @@ if ($form->is_cancelled()) {
     if (empty($files)) {
         redirect(
             $PAGE->url,
-            get_string('no_file_uploaded', 'local_wsmanager'),
+            get_string('no_file_uploaded', 'local_servicemanager'),
             null,
             \core\output\notification::NOTIFY_ERROR
         );
@@ -75,7 +75,7 @@ if ($form->is_cancelled()) {
     // Process based on file type.
     if (pathinfo($filename, PATHINFO_EXTENSION) === 'zip') {
         // Process ZIP file.
-        $tempdir = make_temp_directory('wsmanager_import');
+        $tempdir = make_temp_directory('servicemanager_import');
         $zippath = $tempdir . '/' . $filename;
         $file->copy_content_to($zippath);
 
@@ -115,11 +115,11 @@ if ($form->is_cancelled()) {
 
     // Generate result message.
     $results['errors_count'] = count($results['errors']);
-    $message = get_string('import_complete', 'local_wsmanager', $results);
+    $message = get_string('import_complete', 'local_servicemanager', $results);
     $notifytype = empty($results['errors']) ? \core\output\notification::NOTIFY_SUCCESS : \core\output\notification::NOTIFY_WARNING;
 
     redirect(
-        new moodle_url('/local/wsmanager/pages/dashboard.php'),
+        new moodle_url('/local/servicemanager/pages/dashboard.php'),
         $message,
         null,
         $notifytype
@@ -129,8 +129,8 @@ if ($form->is_cancelled()) {
 /**
  * Import a single schema.
  *
- * @param \local_wsmanager\schema\manager $manager Schema manager.
- * @param \local_wsmanager\schema\validator $validator Validator.
+ * @param \local_servicemanager\schema\manager $manager Schema manager.
+ * @param \local_servicemanager\schema\validator $validator Validator.
  * @param string $yamlcontent YAML content.
  * @param string $conflictaction Conflict action: skip, overwrite, rename.
  * @return array Result with imported, skipped, errors, warnings.
@@ -142,18 +142,18 @@ function import_single_schema($manager, $validator, $yamlcontent, $conflictactio
 
     try {
         // Parse YAML first to get ID.
-        $parser = new \local_wsmanager\schema\yaml_parser();
+        $parser = new \local_servicemanager\schema\yaml_parser();
         $data = $parser->parse($yamlcontent);
         $meta = $parser->extract_meta($data);
         $schemaid = $meta['id'] ?? null;
 
         if (!$schemaid) {
-            $result['errors'][] = get_string('import_error_no_id', 'local_wsmanager');
+            $result['errors'][] = get_string('import_error_no_id', 'local_servicemanager');
             return $result;
         }
 
         // Check for conflicts.
-        $existing = $DB->get_record('local_wsmanager_schemas', ['schema_id' => $schemaid]);
+        $existing = $DB->get_record('local_servicemanager_schemas', ['schema_id' => $schemaid]);
 
         if ($existing) {
             switch ($conflictaction) {
@@ -173,7 +173,7 @@ function import_single_schema($manager, $validator, $yamlcontent, $conflictactio
                     $counter = 1;
                     $newidbase = $schemaid . '.imported';
                     $newid = $newidbase;
-                    while ($DB->record_exists('local_wsmanager_schemas', ['schema_id' => $newid])) {
+                    while ($DB->record_exists('local_servicemanager_schemas', ['schema_id' => $newid])) {
                         $newid = $newidbase . $counter;
                         $counter++;
                     }
@@ -227,11 +227,11 @@ $form->display();
 $formhtml = ob_get_clean();
 
 $context = [
-    'backurl' => (new moodle_url('/local/wsmanager/pages/dashboard.php'))->out(false),
-    'docurl' => (new moodle_url('/local/wsmanager/pages/documentation.php'))->out(false),
+    'backurl' => (new moodle_url('/local/servicemanager/pages/dashboard.php'))->out(false),
+    'docurl' => (new moodle_url('/local/servicemanager/pages/documentation.php'))->out(false),
     'formhtml' => $formhtml,
 ];
 
-echo $OUTPUT->render_from_template('local_wsmanager/import_page', $context);
+echo $OUTPUT->render_from_template('local_servicemanager/import_page', $context);
 
 echo $OUTPUT->footer();
